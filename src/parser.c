@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 01:55:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 13:00:33 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,14 +237,20 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
 		outfile = ft_strword(line + i);
-		/*printf("%s\n",outfile);*/
 		cmds->fd_out = open_file(outfile, 1);
+		printf("out: %s(%i)\n",outfile, cmds->fd_out);
 		while (line[i] >= 'a' && line[i] <= 'z' || line[i] >= 'A' && line[i] <= 'Z' ||  line[i] >= '0' && line[i] <= '9')
 			i++;
 		(*count) += i;
 	}
 	else
 		cmds->fd_out = 0;
+}
+
+int			sintax_check(char *line)
+{
+	if (line[0] == '|')
+		return (-1);
 }
 
 /* funçao que lê os caracteres da linha e cria a struct de comandos.
@@ -264,31 +270,31 @@ int		*parser(char *line, t_vars **variables, char **envp)
 	j = 0;
 	while (line[j] != 0 && line[j] != ';')
 	{
-		/*printf("1:%s\n",line + j);*/
+		printf("---------------------\n");
+		printf("1:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
 			j++;
+		/*sintax_check(line + j);*/
 		iter->cmd = get_cmd(line + j, &j, *variables);
-		/*printf("2:%s\n",line + j);*/
+		printf("2:%s\n",line + j);
 		remove_char(iter->cmd, get_quote(iter->cmd));
-		/*printf("3:%s\n",line + j);*/
+		printf("3:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		iter->flags = get_flags(line + j, &j);
-		/*printf("4:%s\n",line + j);*/
+		printf("4:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		iter->args = get_args(line + j, &j);
-		/*printf("5:%s\n",line + j);*/
+		printf("5:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
-		/*printf("linha:%s\n",line + j);*/
 		get_redirect(line + j, &j, iter);
-		/*printf("3: %s\n",line + j);*/
-		/*printf("---------------------\n");
-		printf("redirector code: %i\n",iter->fd_out);*/
+		printf("6:%s\n",line + j);
+		printf("redirector code: %i\n",iter->fd_out);
 		while (line[j] == ' ')
 			j++;
 		if (!check_cmds(iter, envp))

@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:14:28 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 01:55:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 16:00:14 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	substitute_variables(char **line, t_vars *variables)
 	{
 		vars++;
 		size = 0;
+			printf("%s\n",vars + size);
 		while (vars[size] != ' ' && vars[size] != ';' && vars[size] != '|' && vars[size] != 0 && vars[size] != '"')
 			size++;
 		value = ft_strdup(get_variable(vars, size, variables));

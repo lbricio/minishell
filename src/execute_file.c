@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 01:55:09 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 16:02:12 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,15 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 	/*printf("out inside execve: %i\n", out);*/
 	pid_t	pid;
 	int		fd[2];
+	int		status;
 	pipe(fd);
 
 	pid = fork();
 	if(pid == 0)
 	{
-		/*printf("fd[0]:%i fd[1]:%i old_fd[0]:%i old_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
+		printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
 		printf("file_path: %s\nargv: %s\n",file_path, *argv);
-		printf("---------------------\n");*/
+		printf("output:\n");
 		close(fd[0]);
 		if (out == 0)
 			reset_output();
@@ -105,6 +106,8 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 			dup2(fd[0], STDIN_FILENO);
 		}
 		waitpid(pid, NULL, 0);
+		/*if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
+		g_reset_fd[2] = WEXITSTATUS(status);*/
 		close(fd[0]);
 		if (out != 10 && out != 0)
 		{
@@ -112,10 +115,9 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 			reset_output();
 		}
 		if (out == 0)
-		{
 			reset_input();
-		}
-		
+		printf("exit code:%i\n",g_reset_fd[2]);
+		printf("---------------------\n");
 	}
 }
 

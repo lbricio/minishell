@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 01:55:29 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 14:56:53 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ char	*get_prompt()
 
 int	read_lines(char **line, t_vars **variables, char **envp)
 {
-	save_origin_fd();
 	substitute_variables(line, *variables);
 	while(parser(*line, variables, envp));
 	free(*line);
@@ -64,6 +63,8 @@ t_vars	*initialize_vars(t_vars **variables, char **envp)
 	int	i;
 
 	i = -1;
+	count = 0;
+	save_origin_fd();
 	while (envp[++i] != 0)
 		save_env_var(envp[i], &count, variables);
 }
