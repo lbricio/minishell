@@ -13,6 +13,7 @@ SRCS		=	src/checkers.c\
 				gnl/get_next_line.c\
 				gnl/get_next_line_utils.c\
 				utils/ft_atoi.c\
+				utils/ft_itoa.c\
 				utils/ft_split.c\
 				utils/fd_save.c\
 				utils/utils.c

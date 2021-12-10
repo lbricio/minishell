@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   substitute_vars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:14:28 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 16:00:14 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 20:47:09 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,21 @@ char	*find_vars(char *line, char c)
 	}
 }
 
+void	change_pipe_result(char **line, int i)
+{
+	char	*result;
+	char	*temp;
+
+	result = ft_itoa(g_reset_fd[2]);
+	(*line)[i] = 0;
+	temp = ft_strdup(*line);
+	temp = ft_concat(&temp, result);
+	free(result);
+	temp = ft_concat(&temp, *line + i + 2);
+	free(*line);
+	*line = temp;
+}
+
 void	substitute_variables(char **line, t_vars *variables)
 {
 	t_vars	*iter;
@@ -55,19 +70,27 @@ void	substitute_variables(char **line, t_vars *variables)
 	vars = find_vars(*line, '$');
 	while (vars)
 	{
-		vars++;
-		size = 0;
+		if (vars[1] == '?')
+		{
+			change_pipe_result(line, vars - *line);
+			vars++;
+		}
+		else
+		{
+			vars++;
+			size = 0;
 			printf("%s\n",vars + size);
-		while (vars[size] != ' ' && vars[size] != ';' && vars[size] != '|' && vars[size] != 0 && vars[size] != '"')
-			size++;
-		value = ft_strdup(get_variable(vars, size, variables));
-		vars[-1] = 0;
-		temp = ft_strdup(*line);
-		temp = ft_concat(&temp, value);
-		free(value);
-		temp = ft_concat(&temp, vars + size);
-		free(*line);
-		*line = temp;
+			while (vars[size] != ' ' && vars[size] != ';' && vars[size] != '|' && vars[size] != 0 && vars[size] != '"')
+				size++;
+			value = ft_strdup(get_variable(vars, size, variables));
+			vars[-1] = 0;
+			temp = ft_strdup(*line);
+			temp = ft_concat(&temp, value);
+			free(value);
+			temp = ft_concat(&temp, vars + size);
+			free(*line);
+			*line = temp;
+		}
 		vars = find_vars(*line, '$');
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 13:00:33 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 20:30:30 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,22 @@ char	get_quote(char *line)
 char	*get_cmd(char *line, int *count, t_vars *variables)
 {
 	char	*cmd;
+	char	quote;
 	int		i;
 
+	quote = 0;
 	i = 0;
-	while (line[i] != 0 && line[i] != ' ' && line[i] != '|' && line[i] != ';')
+	while ((line[i] != 0 && line[i] != ' ' && line[i] != '|' && line[i] != ';') || quote)
+	{
+		if ((line[i] == '\'' || line[i] == '"') && !quote)
+			quote = line[i];
+		else if ((line[i] == '\'' || line[i] == '"') && quote)
+			quote = 0;
 		i++;
+	}
 	cmd = ft_strndup(line, i);
+	quote = get_quote(cmd);
+	remove_char(cmd, quote);
 	(*count) += i;
 	return (cmd);
 }
@@ -73,14 +83,24 @@ char	*get_cmd(char *line, int *count, t_vars *variables)
 char	*get_flags(char *line, int *count)
 {
 	char	*flags;
+	char	quote;
 	int		i;
 
-	if (line[0] == '-')
+	if (line[0] == '-' || ((line[0] == '"' || line[0] == '\'') && line[1] == '-'))
 	{
+		quote = 0;
 		i = 0;
 		while (line[i] != 0 && line[i] != ' ' && line[i] != '|' && line[i] != ';')
+		{
+			if ((line[i] == '\'' || line[i] == '"') && !quote)
+				quote = line[i];
+			else if ((line[i] == '\'' || line[i] == '"') && quote)
+				quote = 0;
 			i++;
+		}
 		flags = ft_strndup(line, i);
+		quote = get_quote(flags);
+		remove_char(flags, quote);
 		(*count) += i;
 		return (flags);
 	}
@@ -101,22 +121,23 @@ t_args	*get_args(char *line, int *count)
 	args->arg = 0;
 	args->next = 0;
 	iter = args;
-	quote_count = 0;
 	i = 0;
+	quote = 0;
 	while (line[i] != 0 && line[i] != '|' && line[i] != ';' && line[i] != '<' && line[i] != '>')
 	{
-		quote = get_quote(line + i);
+		quote_count = 0;
 		j = 0;
-		while (line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';')
+		while ((line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';') || quote)
 		{
-			if (line[i + j] == quote)
-				quote_count++;
-			if ((quote_count == 2 || !quote) && line[i + j] == ' ')
-				break ;
+			if ((line[i] == '\'' || line[i] == '"') && !quote)
+				quote = line[i];
+			else if ((line[i] == '\'' || line[i] == '"') && quote)
+				quote = 0;
 			j++;
 		}
 		iter->arg = ft_strndup(line + i, j);
 		iter->next = 0;
+		quote = get_quote(iter->arg);
 		if (quote)
 			remove_char(iter->arg, quote);
 		while (line[i + j] == ' ')

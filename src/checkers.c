@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 01:55:00 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 19:56:48 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int	check_cmds(t_cmds *cmds, char **envp)
 	{
 		if (!is_cmd(iter->cmd) && (iter->cmd[0] == '.' \
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
-			return (execute(iter, envp));
+			{}/* return (execute(iter, envp)); */
 		else if (!is_cmd(iter->cmd))
 			return (cmd_error(cmds));
 		else if (!is_flag(iter))

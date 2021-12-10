@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 15:42:56 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/10 20:42:01 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct variables
 	struct variables	*next;
 }	t_vars;
 
-int g_reset_fd[3];
+extern int g_reset_fd[3];
 
 int		*parser(char *line, t_vars **variables, char **envp);
 void	save_env_var(char *line, int *count, t_vars **variables);
@@ -74,6 +74,7 @@ char	*find_path(char *cmd, char **envp);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strndup(const char *s, int len);
 char	*cmds_to_string(t_cmds *cmds);
+char	*ft_itoa(int n);
 char	*get_prompt();
 char	*status_itoa();
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
