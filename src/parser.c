@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 20:30:30 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/11 11:45:12 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*get_cmd(char *line, int *count, t_vars *variables)
 	{
 		if ((line[i] == '\'' || line[i] == '"') && !quote)
 			quote = line[i];
-		else if ((line[i] == '\'' || line[i] == '"') && quote)
+		else if (line[i] == quote)
 			quote = 0;
 		i++;
 	}
@@ -94,7 +94,7 @@ char	*get_flags(char *line, int *count)
 		{
 			if ((line[i] == '\'' || line[i] == '"') && !quote)
 				quote = line[i];
-			else if ((line[i] == '\'' || line[i] == '"') && quote)
+			else if (line[i] == quote)
 				quote = 0;
 			i++;
 		}
@@ -122,16 +122,15 @@ t_args	*get_args(char *line, int *count)
 	args->next = 0;
 	iter = args;
 	i = 0;
-	quote = 0;
 	while (line[i] != 0 && line[i] != '|' && line[i] != ';' && line[i] != '<' && line[i] != '>')
 	{
-		quote_count = 0;
+		quote = 0;
 		j = 0;
 		while ((line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';') || quote)
 		{
-			if ((line[i] == '\'' || line[i] == '"') && !quote)
-				quote = line[i];
-			else if ((line[i] == '\'' || line[i] == '"') && quote)
+			if ((line[i + j] == '\'' || line[i + j] == '"') && !quote)
+				quote = line[i + j];
+			else if (line[i + j] == quote)
 				quote = 0;
 			j++;
 		}
