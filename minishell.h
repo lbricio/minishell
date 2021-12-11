@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 20:42:01 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/11 14:59:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct cmds
 
 typedef struct variables
 {
+	int					is_env;
 	char				*var;
 	char				*value;
 	struct variables	*next;
@@ -59,9 +60,9 @@ typedef struct variables
 
 extern int g_reset_fd[3];
 
-int		*parser(char *line, t_vars **variables, char **envp);
+int		*parser(char *line, t_vars **variables, char ***envp);
 void	save_env_var(char *line, int *count, t_vars **variables);
-void	executor(t_cmds *cmds, t_vars *variables, char **envp);
+void	executor(t_cmds *cmds, t_vars **variables, char ***envp);
 void	substitute_variables(char **line, t_vars *variables);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
@@ -77,6 +78,8 @@ char	*cmds_to_string(t_cmds *cmds);
 char	*ft_itoa(int n);
 char	*get_prompt();
 char	*status_itoa();
+int		builtin_export(t_cmds *cmds, t_vars **variables, char ***envp);
+int		builtin_unset(t_cmds *cmds, t_vars **variables, char ***envp);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		builtin_exit(t_cmds *cmds, t_vars *variables);
 int		check_cmds(t_cmds *cmds, char **envp);

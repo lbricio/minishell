@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 16:02:12 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/11 12:23:12 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	open_file(char *argv, int i)
 // por algum motivo fica como core_dumped se eu uso cmds->out
 void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds)
 {
-	/*printf("out inside execve: %i\n", out);*/
+	printf("out inside execve: %i\n", out);
 	pid_t	pid;
 	int		fd[2];
 	int		status;
@@ -86,9 +86,9 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 	pid = fork();
 	if(pid == 0)
 	{
-		printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
+		/*printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);*/
 		printf("file_path: %s\nargv: %s\n",file_path, *argv);
-		printf("output:\n");
+		/*printf("output:\n");*/
 		close(fd[0]);
 		if (out == 0)
 			reset_output();
@@ -116,8 +116,8 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 		}
 		if (out == 0)
 			reset_input();
-		printf("exit code:%i\n",g_reset_fd[2]);
-		printf("---------------------\n");
+		/*printf("exit code:%i\n",g_reset_fd[2]);
+		printf("---------------------\n");*/
 	}
 }
 

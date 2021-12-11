@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 11:45:12 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/11 15:01:56 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ t_args	*get_args(char *line, int *count)
 	{
 		quote = 0;
 		j = 0;
-		while ((line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';') || quote)
+		while ((line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';' && line[i + j] != '>') || quote)
 		{
 			if ((line[i + j] == '\'' || line[i + j] == '"') && !quote)
 				quote = line[i + j];
@@ -134,7 +134,7 @@ t_args	*get_args(char *line, int *count)
 				quote = 0;
 			j++;
 		}
-		iter->arg = ft_strndup(line + i, j);
+		iter->arg = ft_strndup(line + i, j - 1); // colocando um -1 casualmente aqui, espero que não quebre tudo
 		iter->next = 0;
 		quote = get_quote(iter->arg);
 		if (quote)
@@ -278,7 +278,7 @@ int			sintax_check(char *line)
  * caracteres da linha e retorna a primeira palavra encontrada como
  * sendo o comando, se a segunda palavra tiver um '-' retorna isso
  * como flag. Retorna o que sobrou como uma lista de argumentos */
-int		*parser(char *line, t_vars **variables, char **envp)
+int		*parser(char *line, t_vars **variables, char ***envp)
 {
 	t_cmds	*cmds;
 	t_cmds	*iter;
@@ -315,10 +315,11 @@ int		*parser(char *line, t_vars **variables, char **envp)
 		get_redirect(line + j, &j, iter);
 		printf("6:%s\n",line + j);
 		printf("redirector code: %i\n",iter->fd_out);
+		printf("---------------------\n");
 		while (line[j] == ' ')
 			j++;
-		if (!check_cmds(iter, envp))
-			executor(iter, *variables, envp);
+		if (!check_cmds(iter, *envp))
+			executor(iter, variables, envp);
 		if (line[j] == '|' && line[j + 1] != '|')
 		{
 			iter->next = malloc(sizeof (t_cmds));

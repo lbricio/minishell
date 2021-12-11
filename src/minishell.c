@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 19:44:27 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/11 15:00:59 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*get_prompt()
 	return (prompt);
 }
 
-int	read_lines(char **line, t_vars **variables, char **envp)
+int	read_lines(char **line, t_vars **variables, char ***envp)
 {
 	substitute_variables(line, *variables);
 	while(parser(*line, variables, envp));
@@ -71,13 +71,30 @@ t_vars	*initialize_vars(t_vars **variables, char **envp)
 		save_env_var(envp[i], &count, variables);
 }
 
+char	**copy_envp(char **envp)
+{
+	char	**new;
+	int		i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	new = ft_calloc(i + 1, sizeof (char *));
+	i = -1;
+	while (envp[++i])
+		new[i] = ft_strdup(envp[i]);
+	return (new);
+}
+
 int	main(int argc, char *argv[], char **envp)
 {
 	t_vars	*variables;
 	t_cmds	*cmds;
 	char	*line;
 	char	*prompt;
-	
+	char	**new_envp;
+
+	new_envp = copy_envp(envp);
 	initialize_vars(&variables, envp);
 	recieve_signals();
 	while (1)
@@ -97,7 +114,7 @@ int	main(int argc, char *argv[], char **envp)
 			}
 			else if (check_unspecified_chars(line))
 				free(line);
-			else if (!read_lines(&line, &variables, envp))
+			else if (!read_lines(&line, &variables, &new_envp))
 				return (0);
 		}
 		else
