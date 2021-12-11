@@ -7,7 +7,6 @@ SRCS		=	src/checkers.c\
 				src/substitute_vars.c\
 				builtin/builtin_echo.c\
 				builtin/builtin_exit.c\
-				builtin/builtin_env.c\
 				builtin/builtin_export.c\
 				builtin/builtin_unset.c\
 				gnl/get_next_line.c\
