@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 18:29:29 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/11 20:24:45 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,21 @@ char	*find_path(char *cmd, char **envp)
 	char	*part_path;
 
 	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+	while (ft_strnstr(envp[i], "PATH", 4) == 0 && i != 69) //problemas aqui
 		i++;
-	paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (paths[i])
+	if (envp[i])
 	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmd);
-		free(part_path);
-		if (access(path, F_OK) == 0)
-			return (path);
-		i++;
+		paths = ft_split(envp[i] + 5, ':');
+		i = 0;
+		while (paths[i])
+		{
+			part_path = ft_strjoin(paths[i], "/");
+			path = ft_strjoin(part_path, cmd);
+			free(part_path);
+			if (access(path, F_OK) == 0)
+				return (path);
+			i++;
+		}
 	}
 	return (0);
 }

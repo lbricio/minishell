@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 19:05:25 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 14:46:27 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/11 20:28:46 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,3 @@ int	builtin_unset(t_cmds *cmds, t_vars **variables, char ***envp)
 	}
 	return (0);
 }
-
-/* unset TERM_PROGRAM */
