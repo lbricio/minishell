@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:47:06 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/10 01:57:03 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 12:44:06 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	recieve_signals(void)
 	}
 	if (sigaction(SIGQUIT, &quit_signal, NULL) == -1)
 	{
-		write(1, "Erro\n", 5);
-		return ;
+			write(1, "Erro\n", 5);
+			return ;
 	}
 }

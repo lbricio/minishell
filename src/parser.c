@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 20:12:44 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 01:04:22 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,13 +241,13 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 	else if (line[0] == '>' && line[1] == '>' && line[2] == '>')
 		cmds->fd_out = -1;
 	else if (line[0] == '>' && line[1] == '>' && line[2] != '>')
-	{
+{
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
 		outfile = ft_strword(line + i);
-		/*printf("%s\n",outfile);*/
 		cmds->fd_out = open_file(outfile, 0);
+		printf("out: %s(%i)\n",outfile, cmds->fd_out);
 		while (line[i] >= 'a' && line[i] <= 'z' || line[i] >= 'A' && line[i] <= 'Z' ||  line[i] >= '0' && line[i] <= '9')
 			i++;
 		(*count) += i;

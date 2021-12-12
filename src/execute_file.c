@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 21:38:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 12:43:06 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 			dup2(fd[1], STDOUT_FILENO);
 		else
 			dup2(out, STDOUT_FILENO);
+		g_reset_fd[2] = 500;
 		execve(file_path, argv, envp);
 	}
 	else
@@ -151,10 +152,16 @@ int	execute(t_cmds *cmds, char **envp)
 	else if (find_path(cmds->cmd, envp))
 		run_execve(find_path(cmds->cmd, envp), argv, envp, cmds->fd_out, cmds);
 	else if (access(cmds->cmd, F_OK) == -1)
+	{
 		printf("%s: No such file or directory\n", cmds->cmd);
+		return (0);
+	}
 	else
+	{
 		printf("%s: Permission denied\n", cmds->cmd);
-	return (0);
+		return (0);
+	}
+	return (1);
 	/* if (execve(find_path(cmd[0], envp), cmd, envp) == -1) */
 		/*retornar um erro*/;
 }
