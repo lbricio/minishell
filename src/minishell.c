@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 15:43:38 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 17:38:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,13 @@ int	str_to_cmd(char *str, int *j)
 
 char	*get_prompt()
 {
-	char	path[500];
+	/*char	path[500];*/
 	char	*prompt;
 
-	getcwd(path, 500);
-	prompt = ft_strjoin("\033[1;33mMinishell\033[0m:\033[1;34m", path);
-	prompt = ft_strjoin(prompt, "\033[0m$ ");
+	/*getcwd(path, 500);
+	prompt = ft_strjoin(path, "# ");*/
+	
+	printf("\033[1;33mMinishell\033[0m");
 	return (prompt);
 }
 
@@ -104,9 +105,9 @@ int	main(int argc, char *argv[], char **envp)
 	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
 	while (1)
 	{
-		prompt = get_prompt();
-		line = readline(prompt);
-		free(prompt);
+		/*prompt = get_prompt();
+		free(prompt);*/
+		line = readline("\001\033[1;33m\002Minishell> \001\033[0m\002");
 		if (!line)
 			break ;
 		if (line[0] != 0)
