@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 15:11:20 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 18:48:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ int		execute(t_cmds *cmds, char **envp, S_SIG **act);
 int		check_quotation(char *line);
 int		ft_atoi(const char *str);
 int		open_file(char *argv, int i);
+int		builtin_pwd(void);
+int		builtin_cd(t_cmds *cmds, t_vars *variables);
 
 int		ft_strlen(char *str);
 char	*ft_strdup(const char *s);

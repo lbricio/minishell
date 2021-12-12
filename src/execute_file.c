@@ -6,13 +6,13 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:59:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 18:54:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	len_list(t_args *list)
+static int	len_list(t_args *list)
 {
 	t_args	*iter;
 	int		i;
@@ -58,6 +58,25 @@ char	*find_path(char *cmd, char **envp)
 	return (0);
 }
 
+char	*change_directory(char *path)
+{
+	char	*slash;
+	char	*final;
+	char	*file;
+
+	slash = ft_strchr(path, '/');
+	while (slash)
+	{
+		final = slash;
+		slash = ft_strchr(slash + 1, '/');
+	}
+	file = final + 1;
+	*final = 0;
+	chdir(path);
+	*final = '/';
+	return (file);
+}
+
 void	error(void)
 {
 	perror("\033[31mError");
@@ -92,7 +111,6 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 	pid = fork();
 	if(pid == 0)
 	{
-		/*config_sigaction(act, handle_sigquit, SIGQUIT);*/
 		/*printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
 		printf("file_path: %s\nargv: %s\n",file_path, *argv);
 		printf("output:\n");*/

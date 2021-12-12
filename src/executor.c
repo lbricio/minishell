@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:19:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:54:30 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 18:57:12 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 			builtin_export(iter, variables, envp);
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "unset", ft_strlen(iter->cmd)))
 			builtin_unset(iter, variables, envp);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "cd", ft_strlen(iter->cmd)))
+			builtin_cd(iter, *variables);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "pwd", ft_strlen(iter->cmd)))
+			builtin_pwd();
+		else if (iter->cmd[0] == '.')
+			execute(iter, *envp, act);
 		else if (find_path(iter->cmd, *envp))
 			(execute(iter, *envp, act));
 		iter = iter->next;
