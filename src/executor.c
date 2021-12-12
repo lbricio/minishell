@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:19:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:10:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 14:54:30 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	exec_env(char **envp)
 	}
 }
 
-void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG *act)
+void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 {
 	t_cmds	*iter;
 	t_cmds	*next;
@@ -46,7 +46,7 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG *act)
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "unset", ft_strlen(iter->cmd)))
 			builtin_unset(iter, variables, envp);
 		else if (find_path(iter->cmd, *envp))
-			(execute(iter, *envp, &act));
+			(execute(iter, *envp, act));
 		iter = iter->next;
 	}
 }

@@ -9,8 +9,6 @@ SRCS		=	src/checkers.c\
 				builtin/builtin_exit.c\
 				builtin/builtin_export.c\
 				builtin/builtin_unset.c\
-				gnl/get_next_line.c\
-				gnl/get_next_line_utils.c\
 				utils/ft_atoi.c\
 				utils/ft_itoa.c\
 				utils/ft_split.c\

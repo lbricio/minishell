@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:19:18 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 14:59:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	open_file(char *argv, int i)
 }
 
 // por algum motivo fica como core_dumped se eu uso cmds->out
-void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG *act)
+void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 {
 	/*printf("out inside execve: %i\n", out);*/
 	pid_t	pid;
@@ -96,7 +96,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG *act)
 		/*printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
 		printf("file_path: %s\nargv: %s\n",file_path, *argv);
 		printf("output:\n");*/
-		config_sigaction(act, handle_sigquit, SIGQUIT);
+		config_sigaction((void *)act, handle_sigquit, SIGQUIT);
 		close(fd[0]);
 		if (cmds->fd_out == 0)
 			reset_output();
@@ -131,7 +131,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG *act)
 
 /* Function that take the command and send it to find_path
  before executing it. */
-int	execute(t_cmds *cmds, char **envp, S_SIG *act)
+int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 {
 	t_vars	*v_iter;
 	t_args	*iter;
@@ -149,9 +149,9 @@ int	execute(t_cmds *cmds, char **envp, S_SIG *act)
 		iter = iter->next;
 	}
 	if (access(cmds->cmd, X_OK) == 0)
-		run(cmds->cmd, argv, envp, cmds, &act);
+		run(cmds->cmd, argv, envp, cmds, act);
 	else if (find_path(cmds->cmd, envp))
-		run(find_path(cmds->cmd, envp), argv, envp, cmds, &act);
+		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);

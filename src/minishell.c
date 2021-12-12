@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:00:14 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 14:59:55 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ char	*get_prompt()
 	return (prompt);
 }
 
-int	read_lines(char **line, t_vars **variables, char ***envp, S_SIG *act)
+int	read_lines(char **line, t_vars **variables, char ***envp, S_SIG **act)
 {
 	substitute_variables(line, *variables);
-	while(parser(*line, variables, envp, &act));
+	while(parser(*line, variables, envp, act));
 	free(*line);
 	return (1);
 }
@@ -118,7 +118,7 @@ int	main(int argc, char *argv[], char **envp)
 			}
 			else if (check_unspecified_chars(line))
 				free(line);
-			else if (!read_lines(&line, &variables, &new_envp, &act))
+			else if (!read_lines(&line, &variables, &new_envp, (void *)&act))
 				return (0);
 		}
 		else
