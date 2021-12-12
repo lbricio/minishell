@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 18:54:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 20:23:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,10 +156,13 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	char	**argv;
 	int		i;
 
-	argv = ft_calloc(len_list(cmds->args) + 1, sizeof (char *));
+	/*build_argv(cmds, argv);*/
+	argv = ft_calloc(10, sizeof(char *));
 	argv[0] = ft_strdup(cmds->cmd);
 	i = 1;
 	iter = cmds->args;
+	if(cmds->flags)
+		argv[i++] = ft_strdup(cmds->flags);
 	while (iter)
 	{
 		argv[i] = iter->arg;
@@ -168,7 +171,7 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	}
 	if (access(cmds->cmd, X_OK) == 0)
 		run(cmds->cmd, argv, envp, cmds, act);
-	else if (find_path(cmds->cmd, envp))
+	else if (find_path(cmds->cmd, envp) && cmds->cmd[0] != '.')
 		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
 	else if (access(cmds->cmd, F_OK) == -1)
 	{

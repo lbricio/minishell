@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:53:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 20:59:05 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,32 @@ char	*get_cmd(char *line, int *count, t_vars *variables)
 	return (cmd);
 }
 
+// translate -l -h -a into -lha
+char 	*trunc_flags(char *flags)
+{
+	char *new_str;
+	char *newest_str;
+	int i;
+	int size;
+	
+	new_str = malloc(20 * sizeof(char));
+	if(flags[0] != '-')
+		return (0);
+	i = 1;
+	size = 0;
+	new_str[0] = '-';
+	while(flags[i] != 0)
+	{
+		if(flags[i] >= 'a' && flags[i] <= 'z' || flags[i] >= 'A' && flags[i] <= 'Z')
+			new_str[++size] = flags[i];
+		i++;
+	}		
+	new_str[++size] = '\0';
+	newest_str = ft_strdup(new_str);
+	free(new_str);
+	return(newest_str);
+}
+
 /* retorna as flags como uma string */
 char	*get_flags(char *line, int *count)
 {
@@ -97,12 +123,15 @@ char	*get_flags(char *line, int *count)
 			else if (line[i] == quote)
 				quote = 0;
 			i++;
+			if(line[i] == ' ')
+				if(line[i + 1] == '-')
+					i += 2;
 		}
 		flags = ft_strndup(line, i);
 		quote = get_quote(flags);
 		remove_char(flags, quote);
 		(*count) += i;
-		return (flags);
+		return (trunc_flags(flags));
 	}
 	return (0);
 }
