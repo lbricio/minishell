@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 18:03:42 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 14:00:14 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ char	*get_prompt()
 	return (prompt);
 }
 
-int	read_lines(char **line, t_vars **variables, char ***envp)
+int	read_lines(char **line, t_vars **variables, char ***envp, S_SIG *act)
 {
 	substitute_variables(line, *variables);
-	while(parser(*line, variables, envp));
+	while(parser(*line, variables, envp, &act));
 	free(*line);
 	return (1);
 }
@@ -93,12 +93,14 @@ int	main(int argc, char *argv[], char **envp)
 	char	*line;
 	char	*prompt;
 	char	**new_envp;
-	int		a[2];
+	struct	sigaction	act;
+	struct	sigaction	act_quit;
 
 	variables = 0;
 	new_envp = copy_envp(envp);
 	initialize_vars(&variables, envp);
-	recieve_signals();
+	config_sigaction(&act, sigint_handle, SIGINT);
+	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
 	while (1)
 	{
 		prompt = get_prompt();
@@ -116,7 +118,7 @@ int	main(int argc, char *argv[], char **envp)
 			}
 			else if (check_unspecified_chars(line))
 				free(line);
-			else if (!read_lines(&line, &variables, &new_envp))
+			else if (!read_lines(&line, &variables, &new_envp, &act))
 				return (0);
 		}
 		else

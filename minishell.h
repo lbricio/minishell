@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 13:18:18 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/12 14:15:18 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <string.h>
+
+# define S_SIG struct sigaction
 
 # define HISTFILESIZE
 # define ECHO 0
@@ -60,14 +62,23 @@ typedef struct variables
 
 extern int g_reset_fd[3];
 
-int		*parser(char *line, t_vars **variables, char ***envp);
 void	save_env_var(char *line, int *count, t_vars **variables);
-void	executor(t_cmds *cmds, t_vars **variables, char ***envp);
+void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG *act);
 void	substitute_variables(char **line, t_vars *variables);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	ft_echo(t_cmds *iter);
-void	recieve_signals(void);
+
+void	save_origin_fd();
+void	reset_input();
+void	reset_output();
+
+void	handle_sigquit(int sig);
+void	sigint_handle_cmd(int sig);
+void	sigint_handle(int sig);
+void	config_sigaction(S_SIG *act, void (*handler)(int), int sig);
+void	handle_heredoc(int sig_num);
+
 char	*ft_strnstr(const char	*big, const char *little, size_t len);
 char	*get_variable(char *line, int size, t_vars *variables);
 char	**ft_split(char const *s, char c);
@@ -78,18 +89,18 @@ char	*cmds_to_string(t_cmds *cmds);
 char	*ft_itoa(int n);
 char	*get_prompt();
 char	*status_itoa();
+char	*ft_strword(const char *s);
+
+int		*parser(char *line, t_vars **variables, char ***envp, S_SIG *act);
 int		builtin_export(t_cmds *cmds, t_vars **variables, char ***envp);
 int		builtin_unset(t_cmds *cmds, t_vars **variables, char ***envp);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		builtin_exit(t_cmds *cmds, t_vars *variables);
-int		check_cmds(t_cmds *cmds, char **envp);
+int		check_cmds(t_cmds *cmds, char **envp, S_SIG *act);
 int		check_unspecified_chars(char *line);
-int		execute(t_cmds *cmds, char **envp);
+int		execute(t_cmds *cmds, char **envp, S_SIG *act);
 int		check_quotation(char *line);
 int		ft_atoi(const char *str);
 int		open_file(char *argv, int i);
-char	*ft_strword(const char *s);
-void	save_origin_fd();
-void	reset_input();
-void	reset_output();
+
 #endif

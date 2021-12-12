@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 01:04:22 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 14:12:44 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,7 +279,7 @@ int			sintax_check(char *line)
  * caracteres da linha e retorna a primeira palavra encontrada como
  * sendo o comando, se a segunda palavra tiver um '-' retorna isso
  * como flag. Retorna o que sobrou como uma lista de argumentos */
-int		*parser(char *line, t_vars **variables, char ***envp)
+int		*parser(char *line, t_vars **variables, char ***envp, S_SIG *act)
 {
 	t_cmds	*cmds;
 	t_cmds	*iter;
@@ -318,8 +318,8 @@ int		*parser(char *line, t_vars **variables, char ***envp)
 		/*printf("redirector code: %i\n",iter->fd_out);*/
 		while (line[j] == ' ')
 			j++;
-		if (!check_cmds(iter, *envp))
-			executor(iter, variables, envp);
+		if (!check_cmds(iter, *envp, &act))
+			executor(iter, variables, envp, &act);
 		if (line[j] == '|' && line[j + 1] != '|')
 		{
 			iter->next = malloc(sizeof (t_cmds));

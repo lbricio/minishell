@@ -6,49 +6,56 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:47:06 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 12:44:06 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 13:20:07 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	sig_handler(int sig, siginfo_t *info, void *ucontext)
+// Do a break line
+// Save the status 130
+void	sigint_handle_cmd(int sig)
+{
+	(void)sig;
+	printf("\n");
+	g_reset_fd[2] = 130;
+}
+
+void	handle_sigquit(int sig)
+{
+	(void)sig;
+	printf("quit (code dumped)\n");
+	g_reset_fd[2] = 131;
+}
+
+// Print a new command line
+// Save the status 130
+void	sigint_handle(int sig)
 {
 	if (sig == SIGINT)
 	{
-		write(0, "\n", 1);
+		write(1,"\n", 1);
+		rl_replace_line("", 0);
 		rl_on_new_line();
-		rl_replace_line("", 1);
 		rl_redisplay();
+		g_reset_fd[2] = 130;
 	}
-	(void)info;
-	(void)(ucontext);
 }
 
-void	recieve_signals(void)
+// Do a break line
+// Exit the process with status 130
+void	handle_heredoc(int sig)
 {
-	struct sigaction	int_signal;
-	struct sigaction	quit_signal;
-	pid_t				pid;
+	(void)sig;
+	write(1,"\n", 1);
+	exit(130);
+}
 
-	int_signal.sa_sigaction = sig_handler;
-	int_signal.sa_flags = SA_SIGINFO;
-	quit_signal.sa_handler = SIG_IGN;
-	pid = getpid();
-	(void)pid;
-	if (sigemptyset(&int_signal.sa_mask) == -1)
-	{
-		write(1, "Erro\n", 5);
-		return ;
-	}
-	if (sigaction(SIGINT, &int_signal, NULL) == -1)
-	{
-		write(1, "Erro\n", 5);
-		return ;
-	}
-	if (sigaction(SIGQUIT, &quit_signal, NULL) == -1)
-	{
-			write(1, "Erro\n", 5);
-			return ;
-	}
+// Set up a sigaction handle signal
+void	config_sigaction(struct sigaction *act, void (*handler)(int), int sig)
+{
+	act->sa_handler = handler;
+	act->sa_flags = 0;
+	sigemptyset(&act->sa_mask);
+	sigaction(sig, act, NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 12:43:06 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 14:19:18 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	open_file(char *argv, int i)
 }
 
 // por algum motivo fica como core_dumped se eu uso cmds->out
-void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds)
+void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG *act)
 {
 	/*printf("out inside execve: %i\n", out);*/
 	pid_t	pid;
@@ -92,23 +92,24 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 	pid = fork();
 	if(pid == 0)
 	{
+		/*config_sigaction(act, handle_sigquit, SIGQUIT);*/
 		/*printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
 		printf("file_path: %s\nargv: %s\n",file_path, *argv);
 		printf("output:\n");*/
+		config_sigaction(act, handle_sigquit, SIGQUIT);
 		close(fd[0]);
-		if (out == 0)
+		if (cmds->fd_out == 0)
 			reset_output();
-		else if (out == 10)
+		else if (cmds->fd_out == 10)
 			dup2(fd[1], STDOUT_FILENO);
 		else
-			dup2(out, STDOUT_FILENO);
-		g_reset_fd[2] = 500;
+			dup2(cmds->fd_out, STDOUT_FILENO);
 		execve(file_path, argv, envp);
 	}
 	else
 	{
 		close(fd[1]);
-		if (out == 10)
+		if (cmds->fd_out == 10)
 		{
 			dup2(fd[0], STDIN_FILENO);
 		}
@@ -116,12 +117,12 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 		/*if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
 		g_reset_fd[2] = WEXITSTATUS(status);*/
 		close(fd[0]);
-		if (out != 10 && out != 0)
+		if (cmds->fd_out != 10 && cmds->fd_out != 0)
 		{
 			reset_input();
 			reset_output();
 		}
-		if (out == 0)
+		if (cmds->fd_out == 0)
 			reset_input();
 		/*printf("exit code:%i\n",g_reset_fd[2]);
 		printf("---------------------\n");*/
@@ -130,7 +131,7 @@ void	run_execve(char *file_path, char **argv, char **envp, int out, t_cmds *cmds
 
 /* Function that take the command and send it to find_path
  before executing it. */
-int	execute(t_cmds *cmds, char **envp)
+int	execute(t_cmds *cmds, char **envp, S_SIG *act)
 {
 	t_vars	*v_iter;
 	t_args	*iter;
@@ -148,9 +149,9 @@ int	execute(t_cmds *cmds, char **envp)
 		iter = iter->next;
 	}
 	if (access(cmds->cmd, X_OK) == 0)
-		run_execve(cmds->cmd, argv, envp, cmds->fd_out, cmds);
+		run(cmds->cmd, argv, envp, cmds, &act);
 	else if (find_path(cmds->cmd, envp))
-		run_execve(find_path(cmds->cmd, envp), argv, envp, cmds->fd_out, cmds);
+		run(find_path(cmds->cmd, envp), argv, envp, cmds, &act);
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);
