@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:59:55 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 15:43:38 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ char	*get_prompt()
 	char	*prompt;
 
 	getcwd(path, 500);
-	prompt = ft_strjoin(path, "# ");
+	prompt = ft_strjoin("\033[1;33mMinishell\033[0m:\033[1;34m", path);
+	prompt = ft_strjoin(prompt, "\033[0m$ ");
 	return (prompt);
 }
 
