@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:57:22 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 15:11:20 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include <fcntl.h>
-# include "gnl/get_next_line.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -102,5 +101,10 @@ int		execute(t_cmds *cmds, char **envp, S_SIG **act);
 int		check_quotation(char *line);
 int		ft_atoi(const char *str);
 int		open_file(char *argv, int i);
+
+int		ft_strlen(char *str);
+char	*ft_strdup(const char *s);
+char	*ft_concat(char **dest, char *src);
+char	*ft_strchr(const char *s, int c);
 
 #endif
