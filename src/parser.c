@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 18:57:11 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 19:41:52 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -458,8 +458,10 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		get_redirect(line + j, &j, iter);
 		while (line[j] == ' ')
 			j++;
-		if ((check_cmds(iter, *envp, act))) // se retornar 1, deixar para o executor
-			exec_builtin(iter, variables, envp, act);
+		printf("cmd:[%s] flags:[%s] flags:[%s]\n",iter->cmd, iter->flags, iter->args->arg);
+		if (iter->cmd[0] != '\0')
+			if ((check_cmds(iter, *envp, act))) // 0 = executou
+				exec_builtin(iter, variables, envp, act);
 		if (line[j] == '|' && line[j + 1] != '|')
 		{
 			iter->next = malloc(sizeof (t_cmds));

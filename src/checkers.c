@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 18:07:10 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 19:44:27 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,22 +90,8 @@ int	cmd_error(t_cmds *cmds)
 
 	printf("%s: command not found\n", cmds->cmd);
 	iter = cmds;
-	while (iter != 0)
-	{
-		if (iter->flags)
-			free(iter->flags);
-		while (iter->args)
-		{
-			next_arg = iter->args->next;
-			free(iter->args);
-			iter->args = next_arg;
-		}
-		next = iter->next;
-		free(iter);
-		iter = next;
-	}
 	g_reset_fd[2] = 127;
-	return (127);
+	return (1);
 }
 
 /* funcao para verificar se os comandos e as flags existem */
@@ -116,10 +102,10 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 	iter = cmds;
 	while (iter)
 	{
-		// se não for builtin in && começar com '.' ou '~' ou '/'
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
 		{
+			printf("executado pelo check_cmds\n");
 			g_reset_fd[2] = 0;
 			execute(iter, envp, act);
 			return (0);
