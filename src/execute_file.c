@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 00:30:28 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 02:15:20 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 		close(fd[1]);
 		if (cmds->fd_out == 1000)
 			dup2(fd[0], STDIN_FILENO);
-		waitpid(pid, NULL, 0);
-		/*if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
-		g_reset_fd[2] = WEXITSTATUS(status);*/
+		waitpid(pid, &status, 0);
+		if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
+			g_reset_fd[2] = WEXITSTATUS(status);
 		close(fd[0]);
 		if (cmds->fd_out != 1000 && cmds->fd_out != 0)
 		{
@@ -168,11 +168,13 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);
+		g_reset_fd[2] = 1;
 		return (0);
 	}
 	else
 	{
 		printf("%s: Permission denied\n", cmds->cmd);
+		g_reset_fd[2] = 126;
 		return (0);
 	}
 	return (1);

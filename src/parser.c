@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 01:05:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 02:15:42 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,20 @@ void	save_env_var(char *line, int *count, t_vars **variables)
 	}
 }
 
+int			sintax_check(char *line)
+{
+	int i;
+
+	i = 0;
+	if (line[i] == '|')
+	{	
+		write(1, "sintax error", 13);
+		write(1, "\n", 1);
+		g_reset_fd[2] = 2;
+		return (-1);
+	}
+}
+
 void		get_redirect(char *line, int *count, t_cmds *cmds)
 {
 	char 	*outfile;
@@ -319,6 +333,8 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		//printf("1:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
+		if (sintax_check(line + j) == -1)
+			break;
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
 			j++;
