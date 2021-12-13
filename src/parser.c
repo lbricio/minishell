@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 04:15:43 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 04:39:34 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,7 @@ int			sintax_check(char *line)
 			i++;
 			while(line[i] == ' ')
 				i++;
-			if (line[i] == '|' || line[i] == '>' || line[i] == '<')
+			if (line[i] == '|' || line[i] == '>' || line[i] == '<' || line[i] == '\0' )
 				if(!(line [i] == '>' && line [i - 1] == '>'))
 					if(!(line [i] == '<' && line [i - 1] == '<'))
 						error = -1;
