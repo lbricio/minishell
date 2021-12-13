@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   substitute_vars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:14:28 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 11:23:36 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/12 22:44:56 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	substitute_variables(char **line, t_vars *variables)
 		{
 			vars++;
 			size = 0;
-			printf("%s\n",vars + size);
+			/*printf("%s\n",vars + size);*/
 			while (vars[size] != ' ' && vars[size] != ';' && vars[size] != '|' && vars[size] != 0 && vars[size] != '"')
 				size++;
 			value = ft_strdup(get_variable(vars, size, variables));

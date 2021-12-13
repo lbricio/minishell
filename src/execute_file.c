@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 22:00:56 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 22:43:05 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int	open_file(char *argv, int i)
 	return (file);
 }
 
-// por algum motivo fica como core_dumped se eu uso cmds->out
 void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 {
 	/*printf("out inside execve: %i\n", out);*/

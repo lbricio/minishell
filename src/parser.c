@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 22:00:11 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 22:44:09 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,12 +295,6 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 	}
 	else
 		cmds->fd_out = 0;
-}
-
-int			sintax_check(char *line)
-{
-	if (line[0] == '|')
-		return (-1);
 }
 
 /* funçao que lê os caracteres da linha e cria a struct de comandos.
