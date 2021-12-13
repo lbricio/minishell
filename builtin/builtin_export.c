@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 00:59:16 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 01:00:40 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 
 	size = 0;
 	iter = cmds->args;
-		if(!((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z'
+
+	if(!((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z'
 		|| (char)iter->arg[0] >= 'A' && (char)iter->arg[0] <= 'Z'))
 	{
 		write(1, "minishell: not a valid identifier", 33);

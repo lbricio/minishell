@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/11 19:41:34 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 01:40:10 by lbricio-         ###   ########.fr       */
+/*   Created: 2021/12/13 01:09:06 by lbricio-          #+#    #+#             */
+/*   Updated: 2021/12/13 01:26:44 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	builtin_pwd(t_cmds  *cmds)
+void	builtin_env(char **envp, t_cmds *cmds)
 {
-	int 	fd;
-	char	path[500];
+	int fd;
+	int	i;
 
-	getcwd(path, 500);
 	if (cmds->fd_out == 0)
 		fd = 1;
 	else if (cmds->fd_out == 1000)
 		fd = 0;
 	else
 		fd = cmds->fd_out;
-	write(fd, path, ft_strlen(path));
-	write(fd, "\n", 1);
+	i = -1;
+	while (envp[++i])
+	{
+		write(fd, envp[i], ft_strlen(envp[i]));
+		write(fd, "\n", 1);
+	}
 	exit(0);
 }
+

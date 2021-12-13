@@ -11,6 +11,7 @@ SRCS		=	src/checkers.c\
 				builtin/builtin_unset.c\
 				builtin/builtin_cd.c\
 				builtin/builtin_pwd.c\
+				builtin/builtin_env.c\
 				utils/ft_atoi.c\
 				utils/ft_itoa.c\
 				utils/ft_split.c\

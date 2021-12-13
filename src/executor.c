@@ -6,23 +6,11 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:19:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 21:32:05 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 01:38:28 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	exec_env(char **envp)
-{
-	int	i;
-
-	i = -1;
-	while (envp[++i])
-	{
-		write(1, envp[i], ft_strlen(envp[i]));
-		write(1, "\n", 1);
-	}
-}
 
 void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 {
@@ -36,9 +24,11 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 	while (iter != 0)
 	{
 		if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "env", ft_strlen(iter->cmd)))
-			exec_env(*envp);
+			builtin_red(cmds, act, 3, *envp);
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "echo", ft_strlen(iter->cmd)))
-			ft_echo(cmds, act);
+			builtin_red(cmds, act, 1, *envp);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "pwd", ft_strlen(iter->cmd)))
+			builtin_red(cmds, act, 2, *envp);
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "exit", ft_strlen(iter->cmd)))
 			builtin_exit(iter, *variables);
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "export", ft_strlen(iter->cmd)))
@@ -47,8 +37,6 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 			builtin_unset(iter, variables, envp);
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "cd", ft_strlen(iter->cmd)))
 			builtin_cd(iter, *variables);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "pwd", ft_strlen(iter->cmd)))
-			builtin_pwd();
 		else if (iter->cmd[0] == '.')
 			execute(iter, *envp, act);
 		else if (find_path(iter->cmd, *envp))

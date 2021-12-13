@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 00:29:02 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 01:39:39 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_echo_child(t_cmds  *iter)
 	exit(0);
 }
 
-void	ft_echo(t_cmds  *cmds, S_SIG **act)
+void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -50,7 +50,12 @@ void	ft_echo(t_cmds  *cmds, S_SIG **act)
 		}
 		else
 			dup2(cmds->fd_out, STDOUT_FILENO);
-		ft_echo_child(cmds);
+		if(builtin == 1)
+			ft_echo_child(cmds);
+		else if(builtin == 2)
+			builtin_pwd(cmds);
+		else if(builtin == 3)
+			builtin_env(envp, cmds);
 	}
 	else
 	{

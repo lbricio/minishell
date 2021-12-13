@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 21:30:07 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 01:38:44 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act);
 void	substitute_variables(char **line, t_vars *variables);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
-void 	ft_echo(t_cmds  *cmds, S_SIG **act);
+void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp);
 
 void	save_origin_fd();
 void	reset_input();
@@ -101,8 +101,9 @@ int		execute(t_cmds *cmds, char **envp, S_SIG **act);
 int		check_quotation(char *line);
 int		ft_atoi(const char *str);
 int		open_file(char *argv, int i);
-int		builtin_pwd(void);
 int		builtin_cd(t_cmds *cmds, t_vars *variables);
+void	builtin_pwd(t_cmds  *cmds);
+void	builtin_env(char **envp, t_cmds *cmds);
 
 int		ft_strlen(char *str);
 char	*ft_strdup(const char *s);
