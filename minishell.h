@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 12:14:44 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 13:54:28 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ int		open_file(char *argv, int i);
 int		builtin_cd(t_cmds *cmds, t_vars *variables);
 void	builtin_pwd(t_cmds  *cmds);
 void	builtin_env(char **envp, t_cmds *cmds);
-int	no_file(char *file);
+int		no_file(char *file);
+int		sintax_error(void);
 
 int		ft_strlen(char *str);
 char	*ft_strdup(const char *s);

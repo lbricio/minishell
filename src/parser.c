@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 04:39:34 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 13:53:52 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,30 @@ char	*get_cmd(char *line, int *count, t_vars *variables)
 	remove_char(cmd, quote);
 	(*count) += i;
 	return (cmd);
+}
+
+char 	*trunc_input_filename(char *line)
+{
+	char *new_str;
+	char *newest_str;
+	int i;
+	int size;
+
+	i = 1;
+	size = 0;
+	new_str = malloc(40 * sizeof(char));
+	while(line[i] != 0 && (line[i] >= 'a' && line[i] <= 'z' 
+		|| line[i] >= 'A' && line[i] <= 'Z'
+		|| line[i] >= '0' && line[i] <= '9'))
+		{
+			new_str[size] = line[i];
+			size++;
+			i++;
+		}
+	new_str[++size] = '\0';
+	newest_str = ft_strdup(new_str);
+	free(new_str);
+	return (newest_str);
 }
 
 // translate -l -h -a into -lha
@@ -277,28 +301,57 @@ int			sintax_check(char *line)
 			while(line[i] == ' ')
 				i++;
 			if (line[i] == '|' || line[i] == '>' || line[i] == '<' || line[i] == '\0' )
-				if(!(line [i] == '>' && line [i - 1] == '>'))
-					if(!(line [i] == '<' && line [i - 1] == '<'))
-						error = -1;
-			break;
+				if(!((line [i] == '>' && line [i - 1] == '>') 
+					|| (line [i] == '<' && line [i - 1] == '<')))
+					{
+						while(line[i] == ' ')
+							i++;
+						if(!( line[i] >= 'a' && line[i] <= 'z' 
+							|| line[i] >= 'A' && line[i] <= 'Z'
+							|| line[i] >= '0' && line[i] <= '9'))
+								error = -1;
+					}
+				else
+						while(line[i] == ' ')
+							i++;
+						if(!( line[i] >= 'a' && line[i] <= 'z' 
+							|| line[i] >= 'A' && line[i] <= 'Z'
+							|| line[i] >= '0' && line[i] <= '9'))
+								error = -1;
 		}
 		i++;
 	}
 	if (error == -1)
-	{
-		write(1, "sintax error", 13);
-		write(1, "\n", 1);
-		g_reset_fd[2] = 2;
-		return (-1);
-	}
+		return (sintax_error());
 }
 
 // procura por < e <<
 //trata o input
 // e remove < e << e seu argumentos da string *line
-char 	*treat_input_red(char *line)
+char 	*treat_input_red(char *line, t_cmds *cmds)
 {
+	char *outfile;
 	char *ret;
+	int i;
+
+	i = 0;
+	if(strchr(line, '<'))
+		return 0;
+	while(line[i])
+		i++;
+	while(line[i] != '<')
+		i--;
+	if(line[i - 1] == '<')
+		printf("heredoc case\n");
+	else
+	{
+		while(line[i] == ' ')
+			i++;
+		outfile = ft_strword(line + i);
+		printf("outfile:%s.\n",outfile);
+		cmds->fd_out = open_file(outfile, 2);
+		dup2(cmds->fd_out, STDIN_FILENO);
+	}
 	return(ret);
 }
 
@@ -349,9 +402,9 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 	{
 		while (line[j] == ' ')
 			j++;
-		/*treat_input_red(line + j);*/
 		if (sintax_check(line + j) == -1)
 			break;
+		//treat_input_red(line + j, iter);
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
 			j++;
