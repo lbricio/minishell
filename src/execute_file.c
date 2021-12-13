@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 22:43:05 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 00:30:28 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,18 +101,13 @@ int	open_file(char *argv, int i)
 
 void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 {
-	/*printf("out inside execve: %i\n", out);*/
 	pid_t	pid;
 	int		fd[2];
 	int		status;
 	pipe(fd);
-
 	pid = fork();
 	if(pid == 0)
 	{
-		/*printf("pipe[0]:%i pipe[1]:%i\nstd_fd[0]:%i std_fd[1]:%i\n", fd[0], fd[1], g_reset_fd[0], g_reset_fd[1]);
-		printf("file_path: %s\nargv: %s\n",file_path, *argv);
-		printf("output:\n");*/
 		config_sigaction((void *)act, handle_sigquit, SIGQUIT);
 		close(fd[0]);
 		if (cmds->fd_out == 0)
@@ -121,16 +116,13 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 			dup2(fd[1], STDOUT_FILENO);
 		else
 			dup2(cmds->fd_out, STDOUT_FILENO);
-	execve(file_path, argv, envp);
-			
+		execve(file_path, argv, envp);
 	}
 	else
 	{
 		close(fd[1]);
 		if (cmds->fd_out == 1000)
-		{
 			dup2(fd[0], STDIN_FILENO);
-		}
 		waitpid(pid, NULL, 0);
 		/*if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
 		g_reset_fd[2] = WEXITSTATUS(status);*/
@@ -155,7 +147,7 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	t_args	*iter;
 	char	**argv;
 	int		i;
-
+	
 	/*build_argv(cmds, argv);*/
 	argv = ft_calloc(10, sizeof(char *));
 	argv[0] = ft_strdup(cmds->cmd);

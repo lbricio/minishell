@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 22:44:09 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 00:29:49 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ t_args	*get_args(char *line, int *count)
 		i += j;
 	}
 	(*count) += i;
+	/*printf("%sF\n",iter->arg);*/
 	return (args);
 }
 
@@ -314,31 +315,30 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 	j = 0;
 	while (line[j] != 0 && line[j] != ';')
 	{
-		/*printf("---------------------\n");
-		printf("1:%s\n",line + j);*/
+		//printf("---------------------\n");
+		//printf("1:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
 			j++;
-		/*sintax_check(line + j);*/
 		iter->cmd = get_cmd(line + j, &j, *variables);
-		/*printf("2:%s\n",line + j);*/
+		//printf("2:%s\n",line + j);
 		remove_char(iter->cmd, get_quote(iter->cmd));
-		/*printf("3:%s\n",line + j);*/
+		//printf("3:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		iter->flags = get_flags(line + j, &j);
-		/*printf("4:%s\n",line + j);*/
+		//printf("4:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		iter->args = get_args(line + j, &j);
-		/*printf("5:%s\n",line + j);*/
+		//printf("5:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		get_redirect(line + j, &j, iter);
-		/*printf("6:%s\n",line + j);*/
-		/*printf("redirector code: %i\n",iter->fd_out);*/
+		//printf("6:%s\n",line + j);
+		//printf("redirector code: %i\n",iter->fd_out);
 		while (line[j] == ' ')
 			j++;
 		if (!check_cmds(iter, *envp, act))

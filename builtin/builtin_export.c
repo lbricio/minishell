@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/11 14:35:32 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/13 00:59:16 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,14 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 
 	size = 0;
 	iter = cmds->args;
+		if(!((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z'
+		|| (char)iter->arg[0] >= 'A' && (char)iter->arg[0] <= 'Z'))
+	{
+		write(1, "minishell: not a valid identifier", 33);
+		write(1, "\n", 1);
+		return(0);
+	}
+
 	while (iter)
 	{
 		if (find_env_var(iter->arg, *envp) == -1)
@@ -148,13 +156,5 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 		prev_size++;
 		iter = iter->next;
 	}
-	/* printf("\n\n\n");
-	int k=0;
-	while ((*envp)[k])
-	{
-		printf("envp k = %s\n", (*envp)[k]);
-		k++;
-	}
-	printf("\n\n\n"); */
 	return (0);
 }
