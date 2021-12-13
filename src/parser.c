@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 13:53:52 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 14:09:23 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,9 +402,12 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 	{
 		while (line[j] == ' ')
 			j++;
-		if (sintax_check(line + j) == -1)
-			break;
-		//treat_input_red(line + j, iter);
+		if (get_quote(line) == 0)
+		{
+			if (sintax_check(line + j) == -1)
+				break;
+			//treat_input_red(line + j, iter);
+		}
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
 			j++;
