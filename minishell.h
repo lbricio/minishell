@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 18:48:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 21:30:07 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act);
 void	substitute_variables(char **line, t_vars *variables);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
-void	ft_echo(t_cmds *iter);
+void 	ft_echo(t_cmds  *cmds, S_SIG **act);
 
 void	save_origin_fd();
 void	reset_input();

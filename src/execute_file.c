@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 20:23:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/12 22:00:56 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,16 +118,17 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 		close(fd[0]);
 		if (cmds->fd_out == 0)
 			reset_output();
-		else if (cmds->fd_out == 10)
+		else if (cmds->fd_out == 1000)
 			dup2(fd[1], STDOUT_FILENO);
 		else
 			dup2(cmds->fd_out, STDOUT_FILENO);
-		execve(file_path, argv, envp);
+	execve(file_path, argv, envp);
+			
 	}
 	else
 	{
 		close(fd[1]);
-		if (cmds->fd_out == 10)
+		if (cmds->fd_out == 1000)
 		{
 			dup2(fd[0], STDIN_FILENO);
 		}
@@ -135,7 +136,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 		/*if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
 		g_reset_fd[2] = WEXITSTATUS(status);*/
 		close(fd[0]);
-		if (cmds->fd_out != 10 && cmds->fd_out != 0)
+		if (cmds->fd_out != 1000 && cmds->fd_out != 0)
 		{
 			reset_input();
 			reset_output();
