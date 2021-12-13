@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 17:50:57 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:59:17 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ char	*find_path(char *cmd, char **envp)
 			free(part_path);
 			if (access(path, F_OK) == 0)
 				return (path);
-			else
-				reset_input();
 			i++;
 		}
 	}
@@ -107,7 +105,6 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 	int		fd[2];
 	int		status;
 	pipe(fd);
-	printf("inner run\n");
 	pid = fork();
 	if(pid == 0)
 	{
@@ -151,8 +148,7 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	t_args	*iter;
 	char	**argv;
 	int		i;
-	
-	/*build_argv(cmds, argv);*/
+
 	argv = ft_calloc(10, sizeof(char *));
 	argv[0] = ft_strdup(cmds->cmd);
 	i = 1;
@@ -166,28 +162,24 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 		iter = iter->next;
 	}
 	if (access(cmds->cmd, X_OK) == 0)
-	{
-		printf("executado pelo execute(access)\n");
 		run(cmds->cmd, argv, envp, cmds, act);
-	}
 	else if (find_path(cmds->cmd, envp) && cmds->cmd[0] != '.')
-	{
-		printf("executado pelo execute(find_path)\n");
 		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
-	}
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);
+		reset_input();
+		reset_output();
 		g_reset_fd[2] = 127;
 		return (0);
 	}
 	else
 	{
 		printf("%s: Permission denied\n", cmds->cmd);
+		reset_input();
+		reset_output();
 		g_reset_fd[2] = 126;
 		return (0);
 	}
 	return (1);
-	/* if (execve(find_path(cmd[0], envp), cmd, envp) == -1) */
-		/*retornar um erro*/;
 }

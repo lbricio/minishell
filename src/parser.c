@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:57:11 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -438,6 +438,7 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		{
 			if (sintax_check(line + j) == -1)
 				break;
+			iter->fd_in = 0;
 			if(strchr(line, '<'))
 				line = ft_strdup(treat_input_red(line + j, iter));
 		}
