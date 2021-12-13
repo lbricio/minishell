@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 01:39:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 12:21:01 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_echo_child(t_cmds  *iter)
 	}
 	if (!iter->flags)
 		write(iter->fd_out, "\n", 1);
-	exit(0);
+	exit(errno);
 }
 
 void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp)

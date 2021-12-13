@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 14:54:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 12:24:37 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	is_flag(t_cmds *cmds)
 
 /* funcao para verificar se o comando passado é ou não
  * um comando aceito */
-int	is_cmd(char *cmd)
+int	is_builtin(char *cmd)
 {
 	int	len;
 
@@ -105,6 +105,7 @@ int	cmd_error(t_cmds *cmds)
 		free(iter);
 		iter = next;
 	}
+	g_reset_fd[2] = 127;
 	return (127);
 }
 
@@ -116,10 +117,10 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 	iter = cmds;
 	while (iter)
 	{
-		if (!is_cmd(iter->cmd) && (iter->cmd[0] == '.' \
+		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
 			return (execute(iter, envp, act));
-		else if (!is_cmd(iter->cmd))
+		else if (!is_builtin(iter->cmd))
 			return (cmd_error(cmds));
 		else if (!is_flag(iter))
 			return (flag_error(cmds));

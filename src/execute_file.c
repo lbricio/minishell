@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 04:42:29 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 12:26:22 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,9 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 			dup2(fd[1], STDOUT_FILENO);
 		else
 			dup2(cmds->fd_out, STDOUT_FILENO);
-		execve(file_path, argv, envp);
+		if (execve(file_path, argv, envp) == -1);
+			no_file(file_path);
+		exit(errno);
 	}
 	else
 	{
@@ -134,8 +136,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 		}
 		if (cmds->fd_out == 0)
 			reset_input();
-		/*printf("exit code:%i\n",g_reset_fd[2]);
-		printf("---------------------\n");*/
+		//printf("exit code:%i\n",g_reset_fd[2]);
 	}
 }
 

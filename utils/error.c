@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/13 01:09:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 12:21:19 by lbricio-         ###   ########.fr       */
+/*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
+/*   Updated: 2021/12/13 12:20:17 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	builtin_env(char **envp, t_cmds *cmds)
+int	no_file(char *file)
 {
-	int fd;
-	int	i;
-
-	if (cmds->fd_out == 0)
-		fd = 1;
-	else if (cmds->fd_out == 1000)
-		fd = 0;
-	else
-		fd = cmds->fd_out;
-	i = -1;
-	while (envp[++i])
-	{
-		write(fd, envp[i], ft_strlen(envp[i]));
-		write(fd, "\n", 1);
-	}
-	exit(0);
+	write(2, "minishell: ", 11);
+	write(2, file, ft_strlen(file));
+	write(2, " :", 2);
+	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	/*if (2 == 3)
+		g_reset_fd[2] = 1;*/
+	return (127);
 }
-
