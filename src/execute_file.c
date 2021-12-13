@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 04:31:56 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 04:42:29 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 			reset_output();
 		}
 		if (cmds->fd_out == 0)
-		reset_input();
+			reset_input();
 		/*printf("exit code:%i\n",g_reset_fd[2]);
 		printf("---------------------\n");*/
 	}
