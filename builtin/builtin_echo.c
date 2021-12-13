@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 12:21:01 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 17:25:40 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
-	int		status;
 	pipe(fd);
 	
 	pid = fork();
@@ -64,6 +63,7 @@ void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp)
 		if (cmds->fd_out == 1000)
 			dup2(fd[0], STDIN_FILENO);
 		waitpid(pid, NULL, 0);
+		g_reset_fd[2] = 0;
 		close(fd[0]);
 		if (cmds->fd_out != 1000 && cmds->fd_out != 0)
 		{

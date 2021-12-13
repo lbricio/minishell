@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 12:24:37 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:07:10 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int	is_flag(t_cmds *cmds)
 	return (1);
 }
 
-/* funcao para verificar se o comando passado é ou não
- * um comando aceito */
+// funcao para verificar se o comando passado é um builtin
 int	is_builtin(char *cmd)
 {
 	int	len;
@@ -117,16 +116,21 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 	iter = cmds;
 	while (iter)
 	{
+		// se não for builtin in && começar com '.' ou '~' ou '/'
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
-			return (execute(iter, envp, act));
+		{
+			g_reset_fd[2] = 0;
+			execute(iter, envp, act);
+			return (0);
+		}
 		else if (!is_builtin(iter->cmd))
 			return (cmd_error(cmds));
 		else if (!is_flag(iter))
 			return (flag_error(cmds));
 		iter = iter->next;
 	}
-	return (0);
+	return (1);
 }
 
 /* verifica se há uma quantidade par da primeira aspas encontrada

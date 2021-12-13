@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 14:47:56 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 17:50:57 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 	int		fd[2];
 	int		status;
 	pipe(fd);
+	printf("inner run\n");
 	pid = fork();
 	if(pid == 0)
 	{
@@ -165,13 +166,19 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 		iter = iter->next;
 	}
 	if (access(cmds->cmd, X_OK) == 0)
+	{
+		printf("executado pelo execute(access)\n");
 		run(cmds->cmd, argv, envp, cmds, act);
+	}
 	else if (find_path(cmds->cmd, envp) && cmds->cmd[0] != '.')
+	{
+		printf("executado pelo execute(find_path)\n");
 		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
+	}
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);
-		g_reset_fd[2] = 1;
+		g_reset_fd[2] = 127;
 		return (0);
 	}
 	else

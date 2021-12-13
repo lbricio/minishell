@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 21:17:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 15:07:42 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 16:50:45 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,24 +103,23 @@ char	*ft_strword(const char *s)
 {
 	char	*dup;
 	int		i;
-	int		u;
+	int		size;
 
-	i = 0;
-	while (s[i] != 0)
-		while (s[i] >= 'a' && s[i] <= 'z' 
-		|| s[i] >= 'A' && s[i] <= 'Z' 
-		||  s[i] >= '0' && s[i] <= '9')
-			i++;
-	dup = malloc(i + 1);
+	size = 0;
+	while (s[size] >= 'a' && s[size] <= 'z' 
+	|| s[size] >= 'A' && s[size] <= 'Z' 
+	|| s[size] >= '0' && s[size] <= '9')
+		size++;
+	dup = malloc(size + 1);
 	if (!dup)
 		return (0);
 	i = 0;
-	while (s[i] != 0)
+	while (i != size)
 	{
 		dup[i] = s[i];
 		i++;
 	}
-	dup[i] = 0;
+	dup[i] = '\0';
 	return (dup);
 }
 

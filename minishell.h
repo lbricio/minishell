@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 13:54:28 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct cmds
 	char		*flags;
 	t_args		*args;
 	struct cmds	*next;
+	int			fd_in;
 	int			fd_out;
 }	t_cmds;
 
@@ -63,22 +64,19 @@ typedef struct variables
 extern int g_reset_fd[3];
 
 void	save_env_var(char *line, int *count, t_vars **variables);
-void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act);
+void	exec_builtin(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act);
 void	substitute_variables(char **line, t_vars *variables);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp);
-
 void	save_origin_fd();
 void	reset_input();
 void	reset_output();
-
 void	handle_sigquit(int sig);
 void	sigint_handle_cmd(int sig);
 void	sigint_handle(int sig);
 void	config_sigaction(S_SIG *act, void (*handler)(int), int sig);
 void	handle_heredoc(int sig_num);
-
 char	*ft_strnstr(const char	*big, const char *little, size_t len);
 char	*get_variable(char *line, int size, t_vars *variables);
 char	**ft_split(char const *s, char c);
@@ -90,7 +88,6 @@ char	*ft_itoa(int n);
 char	*get_prompt();
 char	*status_itoa();
 char	*ft_strword(const char *s);
-
 int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act);
 int		builtin_export(t_cmds *cmds, t_vars **variables, char ***envp);
 int		builtin_unset(t_cmds *cmds, t_vars **variables, char ***envp);
@@ -107,7 +104,7 @@ void	builtin_pwd(t_cmds  *cmds);
 void	builtin_env(char **envp, t_cmds *cmds);
 int		no_file(char *file);
 int		sintax_error(void);
-
+char 	*ft_getinput(char *line, t_cmds *cmds);
 int		ft_strlen(char *str);
 char	*ft_strdup(const char *s);
 char	*ft_concat(char **dest, char *src);

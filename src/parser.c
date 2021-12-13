@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 14:42:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init_cmds(t_cmds *cmds)
 	cmds->cmd = 0;
 	cmds->flags = 0;
 	cmds->args = 0;
+	cmds->fd_in = 0;
 	cmds->fd_out = 0;
 	cmds->next = 0;
 }
@@ -283,7 +284,6 @@ void	save_env_var(char *line, int *count, t_vars **variables)
 	}
 }
 
-
 int			sintax_check(char *line)
 {
 	int i;
@@ -325,15 +325,41 @@ int			sintax_check(char *line)
 		return (sintax_error());
 }
 
-// procura por < e <<
-//trata o input
-// e remove < e << e seu argumentos da string *line
+// transforma < e seus argumentos em whitespaces
+char	*remove_input_char(char *line)
+{
+	int i;
+	int size;
+
+	i = 0;
+	while(line[i])
+		i++;
+	while(line[i] != '<')
+		i--;
+	if(line[i - 1] == '<')
+		i--;
+	while (line[i] == '<')
+	{
+		line[i] = ' ';
+		i++;
+	}
+	while (line[i] == ' ')
+		i++;
+	while (line[i] >= 'a' && line[i] <= 'z'
+	|| line[i] >= 'A' && line[i] <= 'Z'
+	|| line[i] >= '0' && line[i] <= '9')
+	{
+		line[i] = ' ';
+		i++;
+	}
+	return(line);
+}
+
+// procura por < e <<, trata o input, transforma </<< e seus argumentos em whitespaces
 char 	*treat_input_red(char *line, t_cmds *cmds)
 {
 	char *outfile;
-	char *ret;
 	int i;
-
 	i = 0;
 	while(line[i])
 		i++;
@@ -348,12 +374,9 @@ char 	*treat_input_red(char *line, t_cmds *cmds)
 		|| line[i] >= '0' && line[i] <= '9'))
 			i++;
 		outfile = ft_strword(line + i);
-		printf("outfile:%s.\n",outfile);
-		cmds->fd_out = open_file(outfile, 2);
-		dup2(cmds->fd_out, STDIN_FILENO);
+		cmds->fd_in = open_file(outfile, 2);
 	}
-	//ret = remove_input_char(line[0]);
-	return(ret);
+	return(remove_input_char(&line[0]));
 }
 
 void		get_redirect(char *line, int *count, t_cmds *cmds)
@@ -362,7 +385,11 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 	int		i;
 	/*printf("dentro do get_redirect:%s\n",line);*/
 	if (line[0] == '|' && line[1] != '|')
+	{
+		if(cmds->fd_in)
+			close(cmds->fd_in);
 		cmds->fd_out = 1000;
+	}
 	else if (line[0] == '>' && line[1] == '>' && line[2] != '>')
 {
 		i = 0;
@@ -370,7 +397,9 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 			i++;
 		outfile = ft_strword(line + i);
 		cmds->fd_out = open_file(outfile, 0);
-		while (line[i] >= 'a' && line[i] <= 'z' || line[i] >= 'A' && line[i] <= 'Z' ||  line[i] >= '0' && line[i] <= '9')
+		while (line[i] >= 'a' && line[i] <= 'z' 
+		|| line[i] >= 'A' && line[i] <= 'Z' 
+		||  line[i] >= '0' && line[i] <= '9')
 			i++;
 		(*count) += i;
 	}
@@ -381,7 +410,9 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 			i++;
 		outfile = ft_strword(line + i);
 		cmds->fd_out = open_file(outfile, 1);
-		while (line[i] >= 'a' && line[i] <= 'z' || line[i] >= 'A' && line[i] <= 'Z' ||  line[i] >= '0' && line[i] <= '9')
+		while (line[i] >= 'a' && line[i] <= 'z' 
+		|| line[i] >= 'A' && line[i] <= 'Z' 
+		||  line[i] >= '0' && line[i] <= '9')
 			i++;
 		(*count) += i;
 	}
@@ -426,8 +457,8 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		get_redirect(line + j, &j, iter);
 		while (line[j] == ' ')
 			j++;
-		if (!check_cmds(iter, *envp, act))
-			executor(iter, variables, envp, act);
+		if ((check_cmds(iter, *envp, act))) // se retornar 1, deixar para o executor
+			exec_builtin(iter, variables, envp, act);
 		if (line[j] == '|' && line[j + 1] != '|')
 		{
 			iter->next = malloc(sizeof (t_cmds));

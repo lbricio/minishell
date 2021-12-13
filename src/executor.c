@@ -6,13 +6,13 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:19:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 01:38:28 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
+void	exec_builtin(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 {
 	t_cmds	*iter;
 	t_cmds	*next;
@@ -40,7 +40,7 @@ void	executor(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
 		else if (iter->cmd[0] == '.')
 			execute(iter, *envp, act);
 		else if (find_path(iter->cmd, *envp))
-			(execute(iter, *envp, act));
+			(execute(iter, *envp, act)); //segundo EXECUTE
 		iter = iter->next;
 	}
 }
