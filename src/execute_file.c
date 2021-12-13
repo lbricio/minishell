@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 12:26:22 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 14:47:56 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ char	*find_path(char *cmd, char **envp)
 			free(part_path);
 			if (access(path, F_OK) == 0)
 				return (path);
+			else
+				reset_input();
 			i++;
 		}
 	}

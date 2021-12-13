@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 14:09:23 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 14:42:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,8 +335,6 @@ char 	*treat_input_red(char *line, t_cmds *cmds)
 	int i;
 
 	i = 0;
-	if(strchr(line, '<'))
-		return 0;
 	while(line[i])
 		i++;
 	while(line[i] != '<')
@@ -345,13 +343,16 @@ char 	*treat_input_red(char *line, t_cmds *cmds)
 		printf("heredoc case\n");
 	else
 	{
-		while(line[i] == ' ')
+		while (!(line[i] >= 'a' && line[i] <= 'z'
+		|| line[i] >= 'A' && line[i] <= 'Z'
+		|| line[i] >= '0' && line[i] <= '9'))
 			i++;
 		outfile = ft_strword(line + i);
 		printf("outfile:%s.\n",outfile);
 		cmds->fd_out = open_file(outfile, 2);
 		dup2(cmds->fd_out, STDIN_FILENO);
 	}
+	//ret = remove_input_char(line[0]);
 	return(ret);
 }
 
@@ -406,7 +407,8 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		{
 			if (sintax_check(line + j) == -1)
 				break;
-			//treat_input_red(line + j, iter);
+			if(strchr(line, '<'))
+				line = ft_strdup(treat_input_red(line + j, iter));
 		}
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
