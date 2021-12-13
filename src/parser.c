@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 02:15:42 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 04:15:43 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ t_args	*get_args(char *line, int *count)
 	args->next = 0;
 	iter = args;
 	i = 0;
-	while (line[i] != 0 && line[i] != '|' && line[i] != ';' && line[i] != '<' && line[i] != '>')
+	while (line[i] != 0 && line[i] != '|' && line[i] != ';' && line[i] != '>')
 	{
 		quote = 0;
 		j = 0;
@@ -259,18 +259,47 @@ void	save_env_var(char *line, int *count, t_vars **variables)
 	}
 }
 
+
 int			sintax_check(char *line)
 {
 	int i;
+	int error;
 
 	i = 0;
+	error = 0;
 	if (line[i] == '|')
-	{	
+		error = -1;
+	while (line[i])
+	{
+		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
+		{
+			i++;
+			while(line[i] == ' ')
+				i++;
+			if (line[i] == '|' || line[i] == '>' || line[i] == '<')
+				if(!(line [i] == '>' && line [i - 1] == '>'))
+					if(!(line [i] == '<' && line [i - 1] == '<'))
+						error = -1;
+			break;
+		}
+		i++;
+	}
+	if (error == -1)
+	{
 		write(1, "sintax error", 13);
 		write(1, "\n", 1);
 		g_reset_fd[2] = 2;
 		return (-1);
 	}
+}
+
+// procura por < e <<
+//trata o input
+// e remove < e << e seu argumentos da string *line
+char 	*treat_input_red(char *line)
+{
+	char *ret;
+	return(ret);
 }
 
 void		get_redirect(char *line, int *count, t_cmds *cmds)
@@ -280,10 +309,6 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 	/*printf("dentro do get_redirect:%s\n",line);*/
 	if (line[0] == '|' && line[1] != '|')
 		cmds->fd_out = 1000;
-	else if (line[0] == '|' && line[1] == '|')
-		cmds->fd_out = -1;
-	else if (line[0] == '>' && line[1] == '>' && line[2] == '>')
-		cmds->fd_out = -1;
 	else if (line[0] == '>' && line[1] == '>' && line[2] != '>')
 {
 		i = 0;
@@ -291,7 +316,6 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 			i++;
 		outfile = ft_strword(line + i);
 		cmds->fd_out = open_file(outfile, 0);
-		/*printf("out: %s(%i)\n",outfile, cmds->fd_out);*/
 		while (line[i] >= 'a' && line[i] <= 'z' || line[i] >= 'A' && line[i] <= 'Z' ||  line[i] >= '0' && line[i] <= '9')
 			i++;
 		(*count) += i;
@@ -303,7 +327,6 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 			i++;
 		outfile = ft_strword(line + i);
 		cmds->fd_out = open_file(outfile, 1);
-		printf("out: %s(%i)\n",outfile, cmds->fd_out);
 		while (line[i] >= 'a' && line[i] <= 'z' || line[i] >= 'A' && line[i] <= 'Z' ||  line[i] >= '0' && line[i] <= '9')
 			i++;
 		(*count) += i;
@@ -312,11 +335,6 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 		cmds->fd_out = 0;
 }
 
-/* funçao que lê os caracteres da linha e cria a struct de comandos.
- * Esta funcao ignora os espaços em branco. Ela itera por todos os
- * caracteres da linha e retorna a primeira palavra encontrada como
- * sendo o comando, se a segunda palavra tiver um '-' retorna isso
- * como flag. Retorna o que sobrou como uma lista de argumentos */
 int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 {
 	t_cmds	*cmds;
@@ -329,32 +347,25 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 	j = 0;
 	while (line[j] != 0 && line[j] != ';')
 	{
-		//printf("---------------------\n");
-		//printf("1:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
+		/*treat_input_red(line + j);*/
 		if (sintax_check(line + j) == -1)
 			break;
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
 			j++;
 		iter->cmd = get_cmd(line + j, &j, *variables);
-		//printf("2:%s\n",line + j);
 		remove_char(iter->cmd, get_quote(iter->cmd));
-		//printf("3:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		iter->flags = get_flags(line + j, &j);
-		//printf("4:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		iter->args = get_args(line + j, &j);
-		//printf("5:%s\n",line + j);
 		while (line[j] == ' ')
 			j++;
 		get_redirect(line + j, &j, iter);
-		//printf("6:%s\n",line + j);
-		//printf("redirector code: %i\n",iter->fd_out);
 		while (line[j] == ' ')
 			j++;
 		if (!check_cmds(iter, *envp, act))

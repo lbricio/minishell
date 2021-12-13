@@ -6,13 +6,13 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 17:38:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 03:15:02 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int g_reset_fd[3];
+int	g_reset_fd[3];
 
 int	str_to_cmd(char *str, int *j)
 {
@@ -41,22 +41,10 @@ int	str_to_cmd(char *str, int *j)
 	return (cmd);
 }
 
-char	*get_prompt()
-{
-	/*char	path[500];*/
-	char	*prompt;
-
-	/*getcwd(path, 500);
-	prompt = ft_strjoin(path, "# ");*/
-	
-	printf("\033[1;33mMinishell\033[0m");
-	return (prompt);
-}
-
 int	read_lines(char **line, t_vars **variables, char ***envp, S_SIG **act)
 {
 	substitute_variables(line, *variables);
-	while(parser(*line, variables, envp, act));
+	parser(*line, variables, envp, act);
 	free(*line);
 	return (1);
 }
@@ -93,10 +81,9 @@ int	main(int argc, char *argv[], char **envp)
 	t_vars	*variables;
 	t_cmds	*cmds;
 	char	*line;
-	char	*prompt;
 	char	**new_envp;
-	struct	sigaction	act;
-	struct	sigaction	act_quit;
+	S_SIG	act;
+	S_SIG	act_quit;
 
 	variables = 0;
 	new_envp = copy_envp(envp);
@@ -105,8 +92,6 @@ int	main(int argc, char *argv[], char **envp)
 	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
 	while (1)
 	{
-		/*prompt = get_prompt();
-		free(prompt);*/
 		line = readline("\001\033[1;33m\002Minishell> \001\033[0m\002");
 		if (!line)
 			break ;
