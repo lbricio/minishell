@@ -17,7 +17,8 @@ SRCS		=	src/checkers.c\
 				utils/ft_split.c\
 				utils/fd_save.c\
 				utils/utils.c\
-				utils/error.c
+				utils/error.c\
+				utils/heredoc.c
 
 
 OBJS		= $(SRCS:.c=.o)

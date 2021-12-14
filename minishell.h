@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 22:44:06 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,6 @@ int		ft_strlen(char *str);
 char	*ft_strdup(const char *s);
 char	*ft_concat(char **dest, char *src);
 char	*ft_strchr(const char *s, int c);
+void	here_doc(char *limiter, S_SIG **act);
 
 #endif

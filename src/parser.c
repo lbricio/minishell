@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:12:07 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 22:45:16 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ int			sintax_check(char *line)
 								error = -1;
 					}
 				else
-						while(line[i] == ' ')
+						while(line[i] == ' ' || line[i] == '>' || line[i] == '<')
 							i++;
 						if(!( line[i] >= 'a' && line[i] <= 'z' 
 							|| line[i] >= 'A' && line[i] <= 'Z'
@@ -356,17 +356,24 @@ char	*remove_input_char(char *line)
 }
 
 // procura por < e <<, trata o input, transforma </<< e seus argumentos em whitespaces
-char 	*treat_input_red(char *line, t_cmds *cmds)
+char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 {
 	char *outfile;
+	char *limiter;
 	int i;
+
 	i = 0;
 	while(line[i])
 		i++;
 	while(line[i] != '<')
 		i--;
 	if(line[i - 1] == '<')
-		printf("heredoc case\n");
+	{
+		while(line[i] == '<' || line[i] == ' ')
+			i++;
+		limiter = ft_strword(line + i);
+		here_doc(limiter, act);
+	}
 	else
 	{
 		while (!(line[i] >= 'a' && line[i] <= 'z'
@@ -448,7 +455,7 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 				break;
 			iter->fd_in = 0;
 			if(strchr(line, '<'))
-				line = ft_strdup(treat_input_red(line + j, iter));
+				line = ft_strdup(treat_input_red(line + j, iter, act));
 		}
 		save_env_var(line + j, &j, variables);
 		while (line[j] == ' ')
