@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 22:05:29 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 13:27:43 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	read_lines(char **line, t_vars **variables, char ***envp, S_SIG **act)
 	substitute_variables(line, *variables);
 	parser(*line, variables, envp, act);
 	free(*line);
+	reset_input();
+	reset_output();
 	return (1);
 }
 

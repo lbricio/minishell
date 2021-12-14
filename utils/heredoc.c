@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 11:54:10 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 13:20:54 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,13 @@ int	mini_gnl(char **line)
 
 void	here_doc(char *limiter, S_SIG **act)
 {
-	printf("limiter:%s.\n",limiter);
 	pid_t	pid;
 	int		fd[2];
 	int		status;
 	char	*line;
 
+	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
+	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
@@ -60,7 +61,7 @@ void	here_doc(char *limiter, S_SIG **act)
 				break;
 			write(fd[1], line, ft_strlen(line));
 		}
-		exit(EXIT_SUCCESS);
+		exit(errno);
 	}
 	else
 	{
@@ -69,7 +70,9 @@ void	here_doc(char *limiter, S_SIG **act)
 		waitpid(pid, &status, 0);
 		if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
 			g_reset_fd[2] = WEXITSTATUS(status);
-		reset_input();
+		//reset_input(); //em observação
+		config_sigaction((void *)act, SIG_IGN, SIGQUIT);
+		config_sigaction((void *)act, sigint_handle, SIGINT);
 	}
 }
 

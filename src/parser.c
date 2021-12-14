@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 09:24:50 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 13:26:51 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -401,8 +401,8 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 	/*printf("dentro do get_redirect:%s\n",line);*/
 	if (line[0] == '|' && line[1] != '|')
 	{
-		if(cmds->fd_in)
-			close(cmds->fd_in);
+		/*if(cmds->fd_in)
+			close(cmds->fd_in);*/  // em observação
 		cmds->fd_out = 1000;
 	}
 	else if (line[0] == '>' && line[1] == '>' && line[2] != '>')
