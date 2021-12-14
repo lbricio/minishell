@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:57:01 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 13:11:53 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act);
 void	substitute_variables(char **line, t_data *data);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
-void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp);
+void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp);
 void	save_origin_fd();
 void	reset_input();
 void	reset_output();
@@ -115,7 +115,6 @@ void	builtin_pwd(t_cmds  *cmds);
 void	builtin_env(char **envp, t_cmds *cmds);
 int		no_file(char *file);
 int		sintax_error(void);
-char 	*ft_getinput(char *line, t_cmds *cmds);
 int		ft_strlen(char *str);
 char	*ft_strdup(const char *s);
 char	*ft_concat(char **dest, char *src);

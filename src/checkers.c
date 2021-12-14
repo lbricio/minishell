@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:27:33 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 12:21:51 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ int	check_cmds(t_cmds *cmds, t_data *data, char **envp, S_SIG **act)
 	iter = cmds;
 	while (iter)
 	{
-		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
-		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
+		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.' || iter->cmd[0] \
+		== '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
 		{
 			g_reset_fd[2] = 0;
 			execute(iter, envp, act);

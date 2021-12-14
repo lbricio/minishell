@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:38:35 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 13:15:20 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ t_vars	*get_value(t_vars *variables, char *var)
 		iter = iter->next;
 	}
 	return (0);
-	
 }
 
 int	find_env_var(char *var, char **envp)

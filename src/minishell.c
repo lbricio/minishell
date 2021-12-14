@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 22:13:19 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 11:54:54 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,23 @@
 
 int	g_reset_fd[3];
 
-int	str_to_cmd(char *str, int *j)
-{
-	int	len;
-	int	cmd;
-
-	cmd = -1;
-	len = 0;
-	while (str[len + *j] != ' ' && str[len + *j] != '|' && str[len + *j] != 0)
-		len++;
-	if (!ft_strncmp(str + *j, "echo", len))
-		cmd = ECHO;
-	else if (!ft_strncmp(str + *j, "cd", len))
-		cmd = CD;
-	else if (!ft_strncmp(str + *j, "pwd", len))
-		cmd = PWD;
-	else if (!ft_strncmp(str + *j, "export", len))
-		cmd = EXPORT;
-	else if (!ft_strncmp(str + *j, "unset", len))
-		cmd = UNSET;
-	else if (!ft_strncmp(str + *j, "env", len))
-		cmd = ENV;
-	else if (!ft_strncmp(str + *j, "exit", len))
-		cmd = EXIT;
-	(*j) += len;
-	return (cmd);
-}
-
 int	read_lines(char **line, t_data *data, char ***envp, S_SIG **act)
 {
-	substitute_variables(line, data);
-	parser(*line, data, envp, act);
-	free(*line);
-	return (1);
+	add_history(*line);
+	if (check_quotation(*line))
+	{
+		printf("Unclosed quotation\n");
+		free(*line);
+	}
+	else if (check_unspecified_chars(*line, &data))
+		free(*line);
+	else
+	{
+		substitute_variables(line, data);
+		parser(*line, data, envp, act);
+		free(*line);
+		return (1);
+	}
 }
 
 int	initialize_vars(t_data *data, char **envp)
@@ -88,45 +72,41 @@ char	**copy_envp(char **envp)
 	return (new);
 }
 
+char	**initialize(t_data *data, char **envp)
+{
+	S_SIG	act;
+	S_SIG	act_quit;
+	char	**new_envp;
+
+	data->variables = 0;
+	new_envp = copy_envp(envp);
+	if (!new_envp)
+		return (error_handler(1));
+	data->envp = &new_envp;
+	initialize_vars(&data, envp);
+	config_sigaction(&act, sigint_handle, SIGINT);
+	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
+	return (new_envp);
+}
+
 int	main(int argc, char *argv[], char **envp)
 {
 	t_data	data;
 	char	*line;
 	char	**new_envp;
-	S_SIG	act;
-	S_SIG	act_quit;
 
-	data.variables = 0;
-	new_envp = copy_envp(envp);
-	if (!new_envp)
-		return (error_handler(1));
-	data.envp = &new_envp;
-	initialize_vars(&data, envp);
-	config_sigaction(&act, sigint_handle, SIGINT);
-	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
+	new_envp = initialize(&data, envp);
 	while (1)
 	{
 		line = readline("\001\033[1;33m\002Minishell> \001\033[0m\002");
 		if (!line)
 		{
-			printf("teste\n");
+			data.cmds = 0;
 			cleanup(&data, 1);
-			printf("teste\n");
 			return (0);
 		}
 		if (line[0] != 0)
-		{
-			add_history(line);
-			if (check_quotation(line))
-			{
-				printf("Unclosed quotation\n");
-				free(line);
-			}
-			else if (check_unspecified_chars(line, &data))
-				free(line);
-			else if (!read_lines(&line, &data, &new_envp, (void *)&act))
-				return (0);
-		}
+			read_lines(&line, &data, &new_envp, (void *)&act);
 		else
 			free(line);
 		cleanup(&data, 0);

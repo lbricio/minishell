@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 01:09:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 12:21:19 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 13:14:40 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	builtin_env(char **envp, t_cmds *cmds)
 {
-	int fd;
+	int	fd;
 	int	i;
 
 	if (cmds->fd_out == 0)
@@ -31,4 +31,3 @@ void	builtin_env(char **envp, t_cmds *cmds)
 	}
 	exit(0);
 }
-

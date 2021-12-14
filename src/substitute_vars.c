@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:14:28 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:10:53 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 13:03:54 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ void	substitute_variables(char **line, t_data *data)
 		{
 			vars++;
 			size = 0;
-			/*printf("%s\n",vars + size);*/
-			while (vars[size] != ' ' && vars[size] != ';' && vars[size] != '|' && vars[size] != 0 && vars[size] != '"')
+			while (vars[size] != ' ' && vars[size] != ';' && vars[size] != '|' \
+			&& vars[size] != 0 && vars[size] != '"')
 				size++;
 			value = ft_strdup(get_variable(vars, size, data->variables));
 			if (!value)

@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 22:14:12 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 13:05:28 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ int	no_file(char *file)
 	write(2, file, ft_strlen(file));
 	write(2, " :", 2);
 	write(2, strerror(errno), ft_strlen(strerror(errno)));
-	/*if (2 == 3)
-		g_reset_fd[2] = 1;*/
 	return (127);
 }
 
-int sintax_error(void)
+int	sintax_error(void)
 {
 	write(1, "sintax error", 13);
 	write(1, "\n", 1);
@@ -56,31 +54,48 @@ void	cleanup_variables(t_data *data)
 	i = -1;
 	while ((*data->envp)[++i] != 0)
 		free((*data->envp)[i]);
+	free(*data->envp);
+}
+
+void	free_args(t_args **args)
+{
+	t_args	*iter;
+	t_args	*next;
+
+	iter = *args;
+	while (iter)
+	{
+		if (iter->arg)
+			free(iter->arg);
+		next = iter->next;
+		free(iter);
+		iter = next;
+	}
+}
+
+void	free_cmds(t_cmds **cmds)
+{
+	t_cmds	*iter;
+	t_cmds	*next;
+
+	iter = *cmds;
+	while (iter)
+	{
+		if (iter->args)
+			free_args(&iter->args);
+		if (iter->flags)
+			free(iter->flags);
+		if (iter->cmd)
+			free(iter->cmd);
+		next = iter->next;
+		free(iter);
+		iter = next;
+	}
 }
 
 void	cleanup(t_data *data, int end)
 {
-	t_cmds	*i_cmds;
-	t_args	*i_args;
-	void	*next;
-
-	i_cmds = data->cmds;
-	while (i_cmds)
-	{
-		i_args = i_cmds->args;
-		while (i_args)
-		{
-			next = i_args->next;
-			if(i_args->arg)
-				free(i_args->arg);
-			free(i_args);
-			i_args = next;
-		}
-		next = i_cmds->next;
-		free(i_cmds->cmd);
-		free(i_cmds->flags);
-		i_cmds = next;
-	}
+	free_cmds(&data->cmds);
 	if (end)
 		cleanup_variables(data);
 }

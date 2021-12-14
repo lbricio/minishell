@@ -41,6 +41,9 @@ no_flags:	$(OBJS)
 $(NAME):	$(OBJS)
 			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
 
+debug:		$(OBJS)
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS) -g3
+
 clean:
 			rm -fr $(OBJS)
 

@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 20:22:10 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/14 12:59:10 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*find_path(char *cmd, char **envp)
 	while (envp[++i])
 	{
 		if (ft_strnstr(envp[i], "PATH", 4) != 0)
-			break;
+			break ;
 	}
 	if (envp[i])
 	{
@@ -99,44 +99,44 @@ int	open_file(char *argv, int i)
 	return (file);
 }
 
-void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
+void	run(char *file_path, char **argv, t_data *data, S_SIG **act)
 {
 	pid_t	pid;
 	int		fd[2];
 	int		status;
+
 	pipe(fd);
 	pid = fork();
-	if(pid == 0)
+	if (pid == 0)
 	{
 		config_sigaction((void *)act, handle_sigquit, SIGQUIT);
 		close(fd[0]);
-		if (cmds->fd_out == 0)
+		if (data->cmds->fd_out == 0)
 			reset_output();
-		else if (cmds->fd_out == 1000)
+		else if (data->cmds->fd_out == 1000)
 			dup2(fd[1], STDOUT_FILENO);
 		else
-			dup2(cmds->fd_out, STDOUT_FILENO);
-		if (execve(file_path, argv, envp) == -1);
+			dup2(data->cmds->fd_out, STDOUT_FILENO);
+		if (execve(file_path, argv, *(data->envp)) == -1)
 			no_file(file_path);
 		exit(errno);
 	}
 	else
 	{
 		close(fd[1]);
-		if (cmds->fd_out == 1000)
+		if (data->cmds->fd_out == 1000)
 			dup2(fd[0], STDIN_FILENO);
 		waitpid(pid, &status, 0);
 		if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
 			g_reset_fd[2] = WEXITSTATUS(status);
 		close(fd[0]);
-		if (cmds->fd_out != 1000 && cmds->fd_out != 0)
+		if (data->cmds->fd_out != 1000 && data->cmds->fd_out != 0)
 		{
 			reset_input();
 			reset_output();
 		}
-		if (cmds->fd_out == 0)
+		if (data->cmds->fd_out == 0)
 			reset_input();
-		//printf("exit code:%i\n",g_reset_fd[2]);
 	}
 }
 
@@ -153,7 +153,7 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	argv[0] = ft_strdup(cmds->cmd);
 	i = 1;
 	iter = cmds->args;
-	if(cmds->flags)
+	if (cmds->flags)
 		argv[i++] = ft_strdup(cmds->flags);
 	while (iter)
 	{
@@ -162,9 +162,9 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 		iter = iter->next;
 	}
 	if (access(cmds->cmd, X_OK) == 0)
-		run(cmds->cmd, argv, envp, cmds, act);
+		run(cmds->cmd, argv, data, act);
 	else if (find_path(cmds->cmd, envp) && cmds->cmd[0] != '.')
-		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
+		run(find_path(cmds->cmd, envp), argv, data, act);
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);
