@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:43:18 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/13 21:57:01 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct data
 
 extern int g_reset_fd[3];
 
+void	init_cmds(t_cmds *cmds);
 int		save_env_var(char *line, int *count, t_data *data);
 void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act);
 void	substitute_variables(char **line, t_data *data);

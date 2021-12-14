@@ -6,59 +6,11 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 20:13:44 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:42:19 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/13 21:59:17 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	free_args(t_args *args)
-{
-	t_args	*iter;
-	t_args	*next;
-
-	iter = args;
-	while (iter)
-	{
-		free(iter->arg);
-		next = iter->next;
-		free(iter);
-		iter = next;
-	}
-}
-
-void	free_cmds(t_cmds *cmds)
-{
-	t_cmds	*iter;
-	t_cmds	*next;
-
-	iter = cmds;
-	while (iter)
-	{
-		free_args(iter->args);
-		free(iter->cmd);
-		free(iter->flags);
-		next = iter->next;
-		free(iter);
-		iter = next;
-	}
-}
-
-void	free_vars(t_vars *variables)
-{
-	t_vars	*iter;
-	t_vars	*next;
-
-	iter = variables;
-	while (iter)
-	{
-		free(iter->var);
-		free(iter->value);
-		next = iter->next;
-		free(iter);
-		iter = next;
-	}
-}
 
 int	exit_error(int err, char *arg)
 {

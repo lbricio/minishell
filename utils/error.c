@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 21:41:42 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/13 22:14:12 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	cleanup_variables(t_data *data)
 	i = -1;
 	while ((*data->envp)[++i] != 0)
 		free((*data->envp)[i]);
-	exit(0);
 }
 
 void	cleanup(t_data *data, int end)

@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:47:32 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/13 22:13:19 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,12 @@ int	main(int argc, char *argv[], char **envp)
 	{
 		line = readline("\001\033[1;33m\002Minishell> \001\033[0m\002");
 		if (!line)
+		{
+			printf("teste\n");
 			cleanup(&data, 1);
+			printf("teste\n");
+			return (0);
+		}
 		if (line[0] != 0)
 		{
 			add_history(line);
