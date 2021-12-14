@@ -16,7 +16,9 @@ SRCS		=	src/checkers.c\
 				utils/ft_itoa.c\
 				utils/ft_split.c\
 				utils/fd_save.c\
-				utils/utils.c\
+				utils/utils_0.c\
+				utils/utils_1.c\
+				utils/utils_2.c\
 				utils/error.c\
 				utils/heredoc.c
 

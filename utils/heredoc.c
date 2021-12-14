@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 14:33:51 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 16:45:05 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,17 @@ int	mini_gnl(char **line)
 	return (r);
 }
 
+void	heredoc_child(S_SIG **act, int *fd, int pid, int status)
+{
+	close(fd[1]);
+	dup2(fd[0], STDIN_FILENO);
+	waitpid(pid, &status, 0);
+	if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
+		g_reset_fd[2] = WEXITSTATUS(status);
+	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
+	config_sigaction((void *)act, sigint_handle, SIGINT);
+}
+
 void	here_doc(char *limiter, S_SIG **act)
 {
 	pid_t	pid;
@@ -63,14 +74,7 @@ void	here_doc(char *limiter, S_SIG **act)
 		exit(errno);
 	}
 	else
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		waitpid(pid, &status, 0);
-		if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
-			g_reset_fd[2] = WEXITSTATUS(status);
-		//reset_input(); //em observação
-		config_sigaction((void *)act, SIG_IGN, SIGQUIT);
-		config_sigaction((void *)act, sigint_handle, SIGINT);
-	}
+		heredoc_child(act, fd, pid, status);
 }
+
+// NECESSÁRIO ADAPTAR PARA FORMATO DATA
