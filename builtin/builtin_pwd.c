@@ -6,15 +6,15 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 19:41:34 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 01:40:10 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 18:20:26 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	builtin_pwd(t_cmds  *cmds)
+void	builtin_pwd(t_cmds *cmds)
 {
-	int 	fd;
+	int		fd;
 	char	path[500];
 
 	getcwd(path, 500);

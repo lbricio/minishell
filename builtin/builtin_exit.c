@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 20:13:44 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 15:36:27 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 18:18:25 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,6 @@ void	free_vars(t_vars *variables)
 		free(iter);
 		iter = next;
 	}
-}
-
-int	exit_error(int err, char *arg)
-{
-	if (err == 1)
-		printf("exit: too many arguments\n");
-	else if (err == 2)
-		printf("exit: %s: numeric argument required\n", arg);
-	return (err);
 }
 
 static int	check_arg(char *arg)

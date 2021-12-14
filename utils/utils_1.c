@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:48:45 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 16:45:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 18:18:41 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,13 @@ char	*ft_concat(char **dest, char *src)
 	new[i] = 0;
 	free((*dest));
 	return (new);
+}
+
+int	exit_error(int err, char *arg)
+{
+	if (err == 1)
+		printf("exit: too many arguments\n");
+	else if (err == 2)
+		printf("exit: %s: numeric argument required\n", arg);
+	return (err);
 }

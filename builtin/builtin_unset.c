@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 19:05:25 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 16:55:49 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 18:20:45 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int	builtin_unset(t_cmds *cmds, t_vars **variables, char ***envp)
 			}
 			prev = i_vars;
 			i_vars = i_vars->next;
-
 		}
 		iter = iter->next;
 	}
