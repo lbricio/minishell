@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 01:00:40 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 10:54:14 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 	{
 		write(1, "minishell: not a valid identifier", 33);
 		write(1, "\n", 1);
+		g_reset_fd[2] = 1;
 		return(0);
 	}
 

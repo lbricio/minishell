@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/13 23:33:50 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 11:54:10 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	mini_gnl(char **line)
 
 void	here_doc(char *limiter, S_SIG **act)
 {
+	printf("limiter:%s.\n",limiter);
 	pid_t	pid;
 	int		fd[2];
 	int		status;
