@@ -6,11 +6,11 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 13:20:54 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 14:33:51 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../minishell.h"
+#include "../minishell.h"
 
 int	mini_gnl(char **line)
 {
@@ -53,12 +53,11 @@ void	here_doc(char *limiter, S_SIG **act)
 	if (pid == 0)
 	{
 		close(fd[0]);
-
 		config_sigaction((void *)act, handle_heredoc, SIGINT);
 		while (mini_gnl(&line))
 		{
 			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-				break;
+				break ;
 			write(fd[1], line, ft_strlen(line));
 		}
 		exit(errno);
@@ -75,4 +74,3 @@ void	here_doc(char *limiter, S_SIG **act)
 		config_sigaction((void *)act, sigint_handle, SIGINT);
 	}
 }
-
