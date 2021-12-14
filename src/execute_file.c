@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:40:30 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:04:32 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ int	open_file(char *argv, int i)
 		file = open(argv, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	else if (i == 2)
 		file = open(argv, O_RDONLY, 0777);
-	if (file == -1)
-		error();
 	return (file);
 }
 
@@ -109,6 +107,8 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 	if(pid == 0)
 	{
 		config_sigaction((void *)act, handle_sigquit, SIGQUIT);
+		if (cmds->fd_in > 0)
+			dup2(cmds->fd_in, STDIN_FILENO);
 		close(fd[0]);
 		if (cmds->fd_out == 0)
 			reset_output();
@@ -123,6 +123,8 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 	else
 	{
 		close(fd[1]);
+		if (cmds->fd_in > 0)
+			reset_input();
 		if (cmds->fd_out == 1000)
 			dup2(fd[0], STDIN_FILENO);
 		waitpid(pid, &status, 0);
@@ -163,12 +165,12 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 	}
 	if (access(cmds->cmd, X_OK) == 0)
 	{
-		printf("executado pelo acess\n");
+		//printf("executado pelo acess\n");
 		run(cmds->cmd, argv, envp, cmds, act);
 	}
 	else if (find_path(cmds->cmd, envp) && cmds->cmd[0] != '.')
 	{
-		printf("executado pelo find_path\n");
+		//printf("executado pelo find_path\n");
 		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
 	}
 	else if (access(cmds->cmd, F_OK) == -1)

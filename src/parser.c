@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:41:52 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:12:07 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,6 +375,14 @@ char 	*treat_input_red(char *line, t_cmds *cmds)
 			i++;
 		outfile = ft_strword(line + i);
 		cmds->fd_in = open_file(outfile, 2);
+		if (cmds->fd_in == -1)
+		{
+			no_file(outfile);
+			write(1, "\n", 1);
+			g_reset_fd[2] = 127;
+			return ("");
+		}
+		
 	}
 	return(remove_input_char(&line[0]));
 }
@@ -458,7 +466,7 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		get_redirect(line + j, &j, iter);
 		while (line[j] == ' ')
 			j++;
-		printf("cmd:[%s] flags:[%s] flags:[%s]\n",iter->cmd, iter->flags, iter->args->arg);
+		//printf("cmd:[%s] flags:[%s] flags:[%s]\n",iter->cmd, iter->flags, iter->args->arg);
 		if (iter->cmd[0] != '\0')
 			if ((check_cmds(iter, *envp, act))) // 0 = executou
 				exec_builtin(iter, variables, envp, act);

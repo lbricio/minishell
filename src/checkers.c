@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:44:27 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 19:52:51 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
 		{
-			printf("executado pelo check_cmds\n");
+			//printf("executado pelo check_cmds\n");
 			g_reset_fd[2] = 0;
 			execute(iter, envp, act);
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:47:06 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 17:19:08 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 20:54:46 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	sigint_handle(int sig)
 		write(1,"\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		rl_redisplay();
 		g_reset_fd[2] = 130;
 	}
 }
