@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 17:25:40 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 23:58:04 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_echo_child(t_cmds  *iter)
 {
 	t_args	*i;
-	
+
 	i = iter->args;
 	while (i)
 	{

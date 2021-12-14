@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 22:45:16 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 09:24:50 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ t_args	*get_args(char *line, int *count)
 	int		i;
 	int		j;
 
-	args = malloc(sizeof (t_args));
+	args = calloc(2, sizeof (t_args));
 	args->arg = 0;
 	args->next = 0;
 	iter = args;
@@ -189,16 +189,16 @@ t_args	*get_args(char *line, int *count)
 			j++;
 		}
 		iter->arg = ft_strndup(line + i, j);
-		/*printf("arg:%s.\n",iter->arg);*/
 		iter->next = 0;
 		quote = get_quote(iter->arg);
 		if (quote)
 			remove_char(iter->arg, quote);
 		while (line[i + j] == ' ')
 			j++;
+		//printf("[arg:%s]\n",iter->arg);
 		if (line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';')
 		{
-			iter->next = malloc(sizeof (t_args));
+			iter->next = calloc(2, sizeof (t_args));
 			iter = iter->next;
 			iter->next = 0;
 		}
@@ -473,7 +473,7 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 		get_redirect(line + j, &j, iter);
 		while (line[j] == ' ')
 			j++;
-		//printf("cmd:[%s] flags:[%s] flags:[%s]\n",iter->cmd, iter->flags, iter->args->arg);
+		//printf("args2:[%s]\n",(char *)iter->args->next);
 		if (iter->cmd[0] != '\0')
 			if ((check_cmds(iter, *envp, act))) // 0 = executou
 				exec_builtin(iter, variables, envp, act);

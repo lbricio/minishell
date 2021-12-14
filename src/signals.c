@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:47:06 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 23:00:36 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 00:47:21 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	sigint_handle_cmd(int sig)
 void	handle_sigquit(int sig)
 {
 	(void)sig;
+	reset_input();
+	reset_output();
 	printf("quit (code dumped)\n");
 	g_reset_fd[2] = 131;
 }
@@ -37,6 +39,7 @@ void	sigint_handle(int sig)
 		write(1,"\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
+		rl_redisplay();
 		g_reset_fd[2] = 130;
 	}
 }

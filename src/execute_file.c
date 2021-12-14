@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 21:04:32 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 09:31:01 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,14 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 	pid_t	pid;
 	int		fd[2];
 	int		status;
+
+
+	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
+	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
 	pipe(fd);
 	pid = fork();
 	if(pid == 0)
 	{
-		config_sigaction((void *)act, handle_sigquit, SIGQUIT);
 		if (cmds->fd_in > 0)
 			dup2(cmds->fd_in, STDIN_FILENO);
 		close(fd[0]);
@@ -138,8 +141,9 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 		}
 		if (cmds->fd_out == 0)
 			reset_input();
-		//printf("exit code:%i\n",g_reset_fd[2]);
 	}
+	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
+	config_sigaction((void *)act, sigint_handle, SIGINT);
 }
 
 /* Function that take the command and send it to find_path
@@ -163,6 +167,8 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 		i++;
 		iter = iter->next;
 	}
+	//printf("cmd:[%s] flags:[%s] args:[%s]  args2:[%s] \n",iter->cmd, iter->flags, iter->args->arg, (char *)iter->args->next);
+	//printf("cmd:[%s] argv1:[%s] argv2:[%s] argv3:[%s]\n", argv[0], (char *)iter->arg, (char *)iter->next, argv[3]);
 	if (access(cmds->cmd, X_OK) == 0)
 	{
 		//printf("executado pelo acess\n");
