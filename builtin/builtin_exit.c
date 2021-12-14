@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/04 20:13:44 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/12 15:36:27 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:42:19 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int	check_arg(char *arg)
 	return (0);
 }
 
-int	builtin_exit(t_cmds *cmds, t_vars *variables)
+int	builtin_exit(t_cmds *cmds, t_data *data)
 {
 	unsigned char	err;
 	t_args			*iter;
@@ -103,7 +103,6 @@ int	builtin_exit(t_cmds *cmds, t_vars *variables)
 		err = (unsigned char)ft_atoi(cmds->args->arg);
 	else
 		err = 0;
-	free_cmds(cmds);
-	free_vars(variables);
+	cleanup(data, 1);
 	exit(err);
 }

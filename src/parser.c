@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:41:52 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:45:02 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	get_quote(char *line)
 }
 
 /* funçao para retornar um comando como string */
-char	*get_cmd(char *line, int *count, t_vars *variables)
+char	*get_cmd(char *line, int *count, t_data *data)
 {
 	char	*cmd;
 	char	quote;
@@ -74,6 +74,8 @@ char	*get_cmd(char *line, int *count, t_vars *variables)
 		i++;
 	}
 	cmd = ft_strndup(line, i);
+	if (!cmd)
+		cleanup(data, 1);
 	quote = get_quote(cmd);
 	remove_char(cmd, quote);
 	(*count) += i;
@@ -113,6 +115,8 @@ char 	*trunc_flags(char *flags)
 	int size;
 	
 	new_str = malloc(20 * sizeof(char));
+	if (!new_str)
+		return (0);
 	if(flags[0] != '-')
 		return (0);
 	i = 1;
@@ -126,12 +130,14 @@ char 	*trunc_flags(char *flags)
 	}		
 	new_str[++size] = '\0';
 	newest_str = ft_strdup(new_str);
+	if (!newest_str)
+		return (0);
 	free(new_str);
 	return(newest_str);
 }
 
 /* retorna as flags como uma string */
-char	*get_flags(char *line, int *count)
+char	*get_flags(char *line, int *count, t_data *data)
 {
 	char	*flags;
 	char	quote;
@@ -153,6 +159,8 @@ char	*get_flags(char *line, int *count)
 					i += 2;
 		}
 		flags = ft_strndup(line, i);
+		if (!flags)
+			cleanup(data, 1);
 		quote = get_quote(flags);
 		remove_char(flags, quote);
 		(*count) += i;
@@ -162,7 +170,7 @@ char	*get_flags(char *line, int *count)
 }
 
 /* retorna os argumentos em uma lista */
-t_args	*get_args(char *line, int *count)
+t_args	*get_args(char *line, int *count, t_data *data)
 {
 	t_args	*args;
 	t_args	*iter;
@@ -172,6 +180,8 @@ t_args	*get_args(char *line, int *count)
 	int		j;
 
 	args = malloc(sizeof (t_args));
+	if (!args)
+		cleanup(data, 1);
 	args->arg = 0;
 	args->next = 0;
 	iter = args;
@@ -189,33 +199,34 @@ t_args	*get_args(char *line, int *count)
 			j++;
 		}
 		iter->arg = ft_strndup(line + i, j);
-		/*printf("arg:%s.\n",iter->arg);*/
+		if (!iter->arg)
+			cleanup(data, 1);
 		iter->next = 0;
 		quote = get_quote(iter->arg);
-		if (quote)
-			remove_char(iter->arg, quote);
+		remove_char(iter->arg, quote);
 		while (line[i + j] == ' ')
 			j++;
 		if (line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';')
 		{
 			iter->next = malloc(sizeof (t_args));
+			if (!iter->next)
+				cleanup(data, 1);
 			iter = iter->next;
 			iter->next = 0;
 		}
 		i += j;
 	}
 	(*count) += i;
-	/*printf("%sF\n",iter->arg);*/
 	return (args);
 }
 
-void	add_variable(t_vars **variables, t_vars *new)
+void	add_variable(t_data *data, t_vars *new)
 {
 	t_vars	*iter;
 	int		size_new;
 
 	size_new = ft_strlen(new->var);
-	iter = *variables;
+	iter = data->variables;
 	while (iter)
 	{
 		if (!ft_strncmp(iter->var, new->var, size_new))
@@ -227,10 +238,10 @@ void	add_variable(t_vars **variables, t_vars *new)
 		}
 		iter = iter->next;
 	}
-	lstadd_back(variables, new);
+	lstadd_back(&data->variables, new);
 }
 
-void	save_env_var(char *line, int *count, t_vars **variables)
+int	save_env_var(char *line, int *count, t_data *data)
 {
 	t_vars	*new;
 	char	quote;
@@ -240,7 +251,7 @@ void	save_env_var(char *line, int *count, t_vars **variables)
 	int		i;
 
 	if (line[0] == '"' || line[0] == '\'')
-		return ;
+		return (1);
 	end = 0;
 	equal = 0;
 	quote = get_quote(line);
@@ -251,7 +262,7 @@ void	save_env_var(char *line, int *count, t_vars **variables)
 		if (line[i] == '=')
 			equal = i;
 		else if (line[i] == ' ' && equal == 0)
-			return ;
+			return (1);
 		else if (line[i] == ' ' && (!quote || quote_count == 2))
 			break ;
 		else if (line[i] == quote)
@@ -263,24 +274,22 @@ void	save_env_var(char *line, int *count, t_vars **variables)
 	if (equal)
 		(*count) += end;
 	if (line[i] != 0 && line[i] != ';')
-		return ;
+		return (1);
 	if (equal)
 	{
 		new = malloc(sizeof (t_vars));
+		if (!new)
+			cleanup(data, 1);
 		new->value = ft_strndup(line + equal + 1, end - equal - 1);
+		if (!new->value)
+			cleanup(data, 1);
 		remove_char(new->value, '"');
 		remove_char(new->value, '\'');
 		new->var = ft_strndup(line, equal);
+		if (!new->var)
+			cleanup(data, 1);
 		new->next = 0;
-		add_variable(variables, new);
-		/* t_vars *iter;
-		iter = *variables;
-		while (iter)
-		{
-			printf("var = %s\n", iter->var);
-			printf("value = %s\n", iter->value);
-			iter = iter->next;
-		} */
+		add_variable(data, new);
 	}
 }
 
@@ -383,7 +392,7 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 {
 	char 	*outfile;
 	int		i;
-	/*printf("dentro do get_redirect:%s\n",line);*/
+
 	if (line[0] == '|' && line[1] != '|')
 	{
 		if(cmds->fd_in)
@@ -391,7 +400,7 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 		cmds->fd_out = 1000;
 	}
 	else if (line[0] == '>' && line[1] == '>' && line[2] != '>')
-{
+	{
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
@@ -420,15 +429,16 @@ void		get_redirect(char *line, int *count, t_cmds *cmds)
 		cmds->fd_out = 0;
 }
 
-int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
+int	*parser(char *line, t_data *data, char ***envp, S_SIG **act)
 {
-	t_cmds	*cmds;
 	t_cmds	*iter;
 	int		j;
 
-	cmds = malloc(sizeof (t_cmds));
-	init_cmds(cmds);
-	iter = cmds;
+	data->cmds = malloc(sizeof (t_cmds));
+	if (!data->cmds)
+		cleanup(data, 1);
+	init_cmds(data->cmds);
+	iter = data->cmds;
 	j = 0;
 	while (line[j] != 0 && line[j] != ';')
 	{
@@ -439,32 +449,37 @@ int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act)
 			if (sintax_check(line + j) == -1)
 				break;
 			iter->fd_in = 0;
-			if(strchr(line, '<'))
+			if(ft_strchr(line, '<'))
+			{
 				line = ft_strdup(treat_input_red(line + j, iter));
+				if (!line)
+					cleanup(data, 1);
+			}
 		}
-		save_env_var(line + j, &j, variables);
+		save_env_var(line + j, &j, data);
 		while (line[j] == ' ')
 			j++;
-		iter->cmd = get_cmd(line + j, &j, *variables);
+		iter->cmd = get_cmd(line + j, &j, data);
 		remove_char(iter->cmd, get_quote(iter->cmd));
 		while (line[j] == ' ')
 			j++;
-		iter->flags = get_flags(line + j, &j);
+		iter->flags = get_flags(line + j, &j, data);
 		while (line[j] == ' ')
 			j++;
-		iter->args = get_args(line + j, &j);
+		iter->args = get_args(line + j, &j, data);
 		while (line[j] == ' ')
 			j++;
 		get_redirect(line + j, &j, iter);
 		while (line[j] == ' ')
 			j++;
-		printf("cmd:[%s] flags:[%s] flags:[%s]\n",iter->cmd, iter->flags, iter->args->arg);
 		if (iter->cmd[0] != '\0')
-			if ((check_cmds(iter, *envp, act))) // 0 = executou
-				exec_builtin(iter, variables, envp, act);
+			if ((check_cmds(iter, data, *envp, act))) // 0 = executou
+				exec_builtin(iter, data, envp, act);
 		if (line[j] == '|' && line[j + 1] != '|')
 		{
 			iter->next = malloc(sizeof (t_cmds));
+			if (!iter->next)
+				cleanup(data, 1);
 			iter = iter->next;
 			init_cmds(iter);
 			j++;

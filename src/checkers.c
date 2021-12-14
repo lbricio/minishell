@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:44:27 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:27:33 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,47 +55,25 @@ int	is_builtin(char *cmd)
 
 /* caso a flag não exista, essa função é chamada para
  * printar o erro no shell e dar free no que foi alocado */
-int	flag_error(t_cmds *cmds)
+int	flag_error(t_cmds *cmds, t_data *data)
 {
-	t_cmds	*iter;
-	t_cmds	*next;
-	t_args	*next_arg;
-
 	printf("%s: invalid option -- \'%s\'\n", cmds->cmd, &cmds->flags[1]);
-	iter = cmds;
-	while (iter != 0)
-	{
-		if (iter->flags)
-			free(iter->flags);
-		while (iter->args)
-		{
-			next_arg = iter->args->next;
-			free(iter->args);
-			iter->args = next_arg;
-		}
-		next = iter->next;
-		free(iter);
-		iter = next;
-	}
+	cleanup(data, 0);
 	return (2);
 }
 
 /* caso o comando não exista, essa função é chamada para
  * printar o erro no shell e dar free no que foi alocado */
-int	cmd_error(t_cmds *cmds)
+int	cmd_error(t_cmds *cmds, t_data *data)
 {
-	t_cmds	*iter;
-	t_cmds	*next;
-	t_args	*next_arg;
-
 	printf("%s: command not found\n", cmds->cmd);
-	iter = cmds;
 	g_reset_fd[2] = 127;
+	cleanup(data, 0);
 	return (1);
 }
 
 /* funcao para verificar se os comandos e as flags existem */
-int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
+int	check_cmds(t_cmds *cmds, t_data *data, char **envp, S_SIG **act)
 {
 	t_cmds	*iter;
 
@@ -105,15 +83,14 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
 		{
-			printf("executado pelo check_cmds\n");
 			g_reset_fd[2] = 0;
 			execute(iter, envp, act);
 			return (0);
 		}
 		else if (!is_builtin(iter->cmd))
-			return (cmd_error(cmds));
+			return (cmd_error(iter, data));
 		else if (!is_flag(iter))
-			return (flag_error(cmds));
+			return (flag_error(iter, data));
 		iter = iter->next;
 	}
 	return (1);
@@ -145,7 +122,7 @@ int	check_quotation(char *line)
 	return (0);
 }
 
-int	check_unspecified_chars(char *line)
+int	check_unspecified_chars(char *line, t_data *data)
 {
 	int	quote;
 	int	i;
@@ -163,6 +140,7 @@ int	check_unspecified_chars(char *line)
 		else if (!quote && (line[i] == ';' || line[i] == '\\'))
 		{
 			printf("syntax error near unexpected token ';'\n");
+			cleanup(data, 0);
 			return (-1);
 		}
 	}

@@ -12,12 +12,12 @@ SRCS		=	src/checkers.c\
 				builtin/builtin_cd.c\
 				builtin/builtin_pwd.c\
 				builtin/builtin_env.c\
+				utils/error.c\
+				utils/fd_save.c\
 				utils/ft_atoi.c\
 				utils/ft_itoa.c\
 				utils/ft_split.c\
-				utils/fd_save.c\
-				utils/utils.c\
-				utils/error.c
+				utils/utils.c
 
 
 OBJS		= $(SRCS:.c=.o)

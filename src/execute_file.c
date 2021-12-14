@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:40:30 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 20:22:10 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,15 +162,9 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act)
 		iter = iter->next;
 	}
 	if (access(cmds->cmd, X_OK) == 0)
-	{
-		printf("executado pelo acess\n");
 		run(cmds->cmd, argv, envp, cmds, act);
-	}
 	else if (find_path(cmds->cmd, envp) && cmds->cmd[0] != '.')
-	{
-		printf("executado pelo find_path\n");
 		run(find_path(cmds->cmd, envp), argv, envp, cmds, act);
-	}
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		printf("%s: No such file or directory\n", cmds->cmd);

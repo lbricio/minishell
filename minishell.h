@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:04:50 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:43:18 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,19 @@ typedef struct variables
 	struct variables	*next;
 }	t_vars;
 
+typedef struct data
+{
+	t_cmds	*cmds;
+	t_vars	*variables;
+	char	***envp;
+}	t_data;
+
+
 extern int g_reset_fd[3];
 
-void	save_env_var(char *line, int *count, t_vars **variables);
-void	exec_builtin(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act);
-void	substitute_variables(char **line, t_vars *variables);
+int		save_env_var(char *line, int *count, t_data *data);
+void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act);
+void	substitute_variables(char **line, t_data *data);
 void	lstadd_back(t_vars **lst, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp);
@@ -75,6 +83,7 @@ void	reset_output();
 void	handle_sigquit(int sig);
 void	sigint_handle_cmd(int sig);
 void	sigint_handle(int sig);
+void	cleanup(t_data *data, int end);
 void	config_sigaction(S_SIG *act, void (*handler)(int), int sig);
 void	handle_heredoc(int sig_num);
 char	*ft_strnstr(const char	*big, const char *little, size_t len);
@@ -88,18 +97,19 @@ char	*ft_itoa(int n);
 char	*get_prompt();
 char	*status_itoa();
 char	*ft_strword(const char *s);
-int		*parser(char *line, t_vars **variables, char ***envp, S_SIG **act);
-int		builtin_export(t_cmds *cmds, t_vars **variables, char ***envp);
+int		*parser(char *line, t_data *data, char ***envp, S_SIG **act);
+int		builtin_export(t_cmds *cmds, t_data *data, char ***envp);
 int		builtin_unset(t_cmds *cmds, t_vars **variables, char ***envp);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-int		builtin_exit(t_cmds *cmds, t_vars *variables);
-int		check_cmds(t_cmds *cmds, char **envp, S_SIG **act);
-int		check_unspecified_chars(char *line);
+int		builtin_exit(t_cmds *cmds, t_data *data);
+int		check_cmds(t_cmds *cmds, t_data *data, char **envp, S_SIG **act);
+int		check_unspecified_chars(char *line, t_data *data);
 int		execute(t_cmds *cmds, char **envp, S_SIG **act);
 int		check_quotation(char *line);
 int		ft_atoi(const char *str);
 int		open_file(char *argv, int i);
 int		builtin_cd(t_cmds *cmds, t_vars *variables);
+int		error_handler(int n);
 void	builtin_pwd(t_cmds  *cmds);
 void	builtin_env(char **envp, t_cmds *cmds);
 int		no_file(char *file);
