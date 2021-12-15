@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 19:19:14 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 22:14:17 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	find_env_var(char *var, char **envp)
 	return (-1);
 }
 
-void	change_env(char *var, t_vars **variables, char ***envp)
+void	change_env(char *var, t_vars **variables, char ***envp, t_data *data)
 {
 	t_vars	*va;
 	char	*temp;
@@ -82,25 +82,33 @@ void	change_env(char *var, t_vars **variables, char ***envp)
 	{
 		free((*envp)[change]);
 		(*envp)[change] = ft_strdup(var);
-		save_env_var(var, &i, variables);
+		if (!(*envp)[change])
+		{
+			while (--change >= 0)
+				free((*envp)[change]);
+			cleanup(data, 2);
+		}
+		save_env_var(var, &i, data);
 	}
 	else if (get_value(*variables, var))
 	{
 		free((*envp)[change]);
 		va = get_value(*variables, var);
 		temp = ft_strjoin(va->var, "=");
+		if (!temp)
+			cleanup(data, 2);
 		(*envp)[change] = ft_strjoin(temp, va->value);
+		if (!(*envp)[change])
+		{
+			while (--change >= 0)
+				free((*envp)[change]);
+			cleanup(data, 2);
+		}
 		free(temp);
 	}
-	/* else
-	{
-		free(change);
-		change = ft_strjoin(var, "=");
-		save_env_var(change, &i, variables);
-	} */
 }
 
-int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
+int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp, t_data *data)
 {
 	t_args	*iter;
 	t_vars	*va;
@@ -111,16 +119,14 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 
 	size = 0;
 	iter = cmds->args;
-
-	if(!((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z'
-		|| (char)iter->arg[0] >= 'A' && (char)iter->arg[0] <= 'Z'))
+	if(!(((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z')
+		|| ((char)iter->arg[0] >= 'A' && (char)iter->arg[0] <= 'Z')))
 	{
 		write(1, "minishell: not a valid identifier", 33);
 		write(1, "\n", 1);
 		g_reset_fd[2] = 1;
 		return(0);
 	}
-
 	while (iter)
 	{
 		if (find_env_var(iter->arg, *envp) == -1)
@@ -132,7 +138,7 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 		prev_size++;
 	ft_realloc(envp, size);
 	if (!(*envp))
-		return (-1);
+		cleanup(data, 2);
 	iter = cmds->args;
 	while (iter)
 	{
@@ -141,7 +147,13 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 			if (ft_strchr(iter->arg, '='))
 			{
 				(*envp)[prev_size] = ft_strdup(iter->arg);
-				save_env_var(iter->arg, &i, variables);
+				if (!(*envp)[prev_size])
+				{
+					while (--prev_size >= 0)
+						free((*envp)[prev_size]);
+					cleanup(data, 2);
+				}
+				save_env_var(iter->arg, &i, data);
 			}
 			else if (get_value(*variables, iter->arg))
 			{
@@ -149,12 +161,26 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp)
 				temp = ft_strjoin(va->var, "=");
 				(*envp)[prev_size] = ft_strjoin(temp, va->value);
 				free(temp);
+				if (!(*envp)[prev_size])
+				{
+					while (--prev_size >= 0)
+						free((*envp)[prev_size]);
+					cleanup(data, 2);
+				}
 			}
 			else
+			{
 				(*envp)[prev_size] = ft_strjoin(iter->arg, "=");
+				if (!(*envp)[prev_size])
+				{
+					while (--prev_size >= 0)
+						free((*envp)[prev_size]);
+					cleanup(data, 2);
+				}
+			}
 		}
 		else
-			change_env(iter->arg, variables, envp);
+			change_env(iter->arg, variables, envp, data);
 		prev_size++;
 		iter = iter->next;
 	}

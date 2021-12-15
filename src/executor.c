@@ -3,44 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:19:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 18:06:24 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 21:44:14 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_builtin(t_cmds *cmds, t_vars **variables, char ***envp, S_SIG **act)
+void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act)
 {
 	t_cmds	*iter;
-	t_cmds	*next;
-	t_args	*next_arg;
-	char	*line;
 
-	next_arg = cmds->args;
 	iter = cmds;
 	while (iter != 0)
 	{
-		if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "env", ft_strlen(iter->cmd)))
+		if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "env", 3))
 			builtin_red(cmds, act, 3, *envp);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "echo", ft_strlen(iter->cmd)))
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "echo", 4))
 			builtin_red(cmds, act, 1, *envp);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "pwd", ft_strlen(iter->cmd)))
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "pwd", 3))
 			builtin_red(cmds, act, 2, *envp);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "exit", ft_strlen(iter->cmd)))
-			builtin_exit(iter, *variables);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "export", ft_strlen(iter->cmd)))
-			builtin_export(iter, variables, envp);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "unset", ft_strlen(iter->cmd)))
-			builtin_unset(iter, variables, envp);
-		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "cd", ft_strlen(iter->cmd)))
-			builtin_cd(iter, *variables);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "exit", 4))
+			builtin_exit(iter, data);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "export", 6))
+			builtin_export(iter, &data->variables, envp, data);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "unset", 5))
+			builtin_unset(iter, &data->variables, envp);
+		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "cd", 2))
+			builtin_cd(iter, data->variables);
 		else if (iter->cmd[0] == '.')
-			execute(iter, *envp, act);
+			execute(iter, *envp, act, data);
 		else if (find_path(iter->cmd, *envp))
-			(execute(iter, *envp, act)); //segundo EXECUTE
+			(execute(iter, *envp, act, data)); //segundo EXECUTE
 		iter = iter->next;
 	}
 }

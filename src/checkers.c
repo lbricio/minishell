@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/13 19:52:51 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 21:43:22 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,18 +84,13 @@ int	flag_error(t_cmds *cmds)
  * printar o erro no shell e dar free no que foi alocado */
 int	cmd_error(t_cmds *cmds)
 {
-	t_cmds	*iter;
-	t_cmds	*next;
-	t_args	*next_arg;
-
 	printf("%s: command not found\n", cmds->cmd);
-	iter = cmds;
 	g_reset_fd[2] = 127;
 	return (1);
 }
 
 /* funcao para verificar se os comandos e as flags existem */
-int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
+int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 {
 	t_cmds	*iter;
 
@@ -105,9 +100,8 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
 		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
 		{
-			//printf("executado pelo check_cmds\n");
 			g_reset_fd[2] = 0;
-			execute(iter, envp, act);
+			execute(iter, envp, act, data);
 			return (0);
 		}
 		else if (!is_builtin(iter->cmd))
@@ -122,14 +116,12 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act)
 /* verifica se há uma quantidade par da primeira aspas encontrada
  * ainda tenho que considerar o caso de encontrar aspas abertas e fechadas
  * de um jeito e depois aspas abertas de outro jeito */
-int	check_quotation(char *line)
+int	check_quotation(char *line, t_data *data)
 {
 	char	quote;
-	int		quote_counter;
 	int		i;
 
 	quote = 0;
-	quote_counter = 0;
 	i = -1;
 	while (line[++i] != 0)
 	{
@@ -141,11 +133,14 @@ int	check_quotation(char *line)
 			quote = '\'';
 	}
 	if (quote)
+	{
+		cleanup(data, 0);
 		return (-1);
+	}
 	return (0);
 }
 
-int	check_unspecified_chars(char *line)
+int	check_unspecified_chars(char *line, t_data *data)
 {
 	int	quote;
 	int	i;
@@ -162,6 +157,7 @@ int	check_unspecified_chars(char *line)
 			quote = 0;
 		else if (!quote && (line[i] == ';' || line[i] == '\\'))
 		{
+			cleanup(data, 0);
 			printf("syntax error near unexpected token ';'\n");
 			return (-1);
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_save.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/09 11:27:14 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 15:44:32 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 21:10:46 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,23 +29,20 @@ void	reset_output(void)
 	dup2(g_reset_fd[1], 1);
 }
 
-char	*status_itoa(void)
+int	exec_no_file(t_cmds *cmds)
 {
-	char	*ret;
+	printf("%s: No such file or directory\n", cmds->cmd);
+	reset_input();
+	reset_output();
+	g_reset_fd[2] = 127;
+	return (0);
+}
 
-	if (g_reset_fd[2] == 0)
-		ret = "0";
-	if (g_reset_fd[2] == 1)
-		ret = "1";
-	if (g_reset_fd[2] == 2)
-		ret = "2";
-	if (g_reset_fd[2] == 126)
-		ret = "126";
-	if (g_reset_fd[2] == 127)
-		ret = "127";
-	if (g_reset_fd[2] == 128)
-		ret = "128";
-	if (g_reset_fd[2] == 130)
-		ret = "130";
-	return (ret);
+int	exec_no_perm(t_cmds *cmds)
+{	
+	printf("%s: Permission denied\n", cmds->cmd);
+	reset_input();
+	reset_output();
+	g_reset_fd[2] = 126;
+	return (0);
 }

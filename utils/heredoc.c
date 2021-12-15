@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 16:45:05 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 22:16:48 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	here_doc(char *limiter, S_SIG **act)
 	int		status;
 	char	*line;
 
+	status = 0;
 	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
 	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
 	pipe(fd);

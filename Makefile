@@ -12,6 +12,7 @@ SRCS		=	src/checkers.c\
 				builtin/builtin_cd.c\
 				builtin/builtin_pwd.c\
 				builtin/builtin_env.c\
+				utils/cleanup.c\
 				utils/ft_atoi.c\
 				utils/ft_itoa.c\
 				utils/ft_split.c\
@@ -43,6 +44,9 @@ no_flags:	$(OBJS)
 
 $(NAME):	$(OBJS)
 			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
+
+debug:
+			$(CC) $(CFLAGS) -g3 -o minishell_debug $(SRCS) $(LIBS)
 
 clean:
 			rm -fr $(OBJS)

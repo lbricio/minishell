@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 18:28:40 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/14 23:09:10 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	ft_echo_aux(t_cmds *cmds, S_SIG **act, pid_t pid, int *fd)
 	}
 	if (cmds->fd_out == 0)
 		reset_input();
+	(void)act;
 }
 
 void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp)
@@ -74,4 +75,5 @@ void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp)
 			builtin_env(envp, cmds);
 	}
 	ft_echo_aux(cmds, act, pid, fd);
+	(void)act;
 }
