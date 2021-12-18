@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 22:14:17 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 18:06:34 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	change_env(char *var, t_vars **variables, char ***envp, t_data *data)
 				free((*envp)[change]);
 			cleanup(data, 2);
 		}
-		save_env_var(var, &i, data);
+		save_env_var(var, &i, data, 1);
 	}
 	else if (get_value(*variables, var))
 	{
@@ -153,7 +153,7 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp, t_data *data)
 						free((*envp)[prev_size]);
 					cleanup(data, 2);
 				}
-				save_env_var(iter->arg, &i, data);
+				save_env_var(iter->arg, &i, data, 1);
 			}
 			else if (get_value(*variables, iter->arg))
 			{

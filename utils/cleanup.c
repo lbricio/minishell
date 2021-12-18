@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 19:29:34 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 21:20:18 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 18:41:10 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ void	free_cmds(t_cmds **cmds)
 		if (iter->args)
 			free_args(&iter->args);
 		if (iter->flags)
+		{
 			free(iter->flags);
+		}
 		if (iter->cmd)
 			free(iter->cmd);
 		next = iter->next;

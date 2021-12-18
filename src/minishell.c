@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 22:19:46 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 18:40:17 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ void	initialize_vars(t_data *data, char **envp)
 	int	count;
 	int	i;
 
-	i = -1;
-	count = 0;
 	save_origin_fd();
+	count = 0;
+	i = -1;
 	while (envp[++i] != 0)
-		save_env_var(envp[i], &count, data);
+		save_env_var(envp[i], &count, data, 1);
 }
 
 char	**copy_envp(char **envp)
@@ -100,6 +100,13 @@ int	main(int argc, char *argv[], char **envp)
 	if (!data.envp)
 		return (1);
 	initialize_vars(&data, envp);
+	/* t_vars *iter;
+	iter = data.variables;
+	while (iter)
+	{
+		printf("%s=%s\n", iter->var, iter->value);
+		iter = iter->next;
+	} */
 	config_sigaction(&act, sigint_handle, SIGINT);
 	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
 	while (1)

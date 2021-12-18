@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 23:09:10 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 17:16:01 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,10 @@ void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp)
 		else if (builtin == 3)
 			builtin_env(envp, cmds);
 	}
-	ft_echo_aux(cmds, act, pid, fd);
+	else
+	{
+		wait(NULL);
+		ft_echo_aux(cmds, act, pid, fd);
+	}
 	(void)act;
 }

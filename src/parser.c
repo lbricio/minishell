@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 22:11:28 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 18:43:12 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char 	*trunc_flags(char *flags, t_data *data)
 	int i;
 	int size;
 	
-	new_str = malloc(20 * sizeof(char));
+	new_str = ft_calloc(ft_strlen(flags) + 1, sizeof(char));
 	if (!new_str)
 		cleanup(data, 2);
 	if(flags[0] != '-')
@@ -140,6 +140,7 @@ char 	*trunc_flags(char *flags, t_data *data)
 char	*get_flags(char *line, int *count, t_data *data)
 {
 	char	*flags;
+	char	*trunc;
 	char	quote;
 	int		i;
 
@@ -164,7 +165,9 @@ char	*get_flags(char *line, int *count, t_data *data)
 		quote = get_quote(flags);
 		remove_char(flags, quote);
 		(*count) += i;
-		return (trunc_flags(flags, data));
+		trunc = trunc_flags(flags, data);
+		free(flags);
+		return (trunc);
 	}
 	return (0);
 }
@@ -222,28 +225,29 @@ t_args	*get_args(char *line, int *count, t_data *data)
 	return (args);
 }
 
-void	add_variable(t_vars **variables, t_vars *new)
+void	add_variable(t_data *data, t_vars *new)
 {
 	t_vars	*iter;
 	int		size_new;
 
 	size_new = ft_strlen(new->var);
-	iter = *variables;
+	iter = data->variables;
 	while (iter)
 	{
-		if (!ft_strncmp(iter->var, new->var, size_new))
+		if (!ft_strncmp(iter->var, new->var, size_new) && size_new == ft_strlen(iter->var))
 		{
 			free(iter->value);
 			iter->value = new->value;
 			free(new->var);
+			free(new);
 			return ;
 		}
 		iter = iter->next;
 	}
-	lstadd_back(variables, new);
+	lstadd_back(data, new);
 }
 
-void	save_env_var(char *line, int *count, t_data *data)
+void	save_env_var(char *line, int *count, t_data *data, int env)
 {
 	t_vars	*new;
 	char	quote;
@@ -259,13 +263,13 @@ void	save_env_var(char *line, int *count, t_data *data)
 	quote = get_quote(line);
 	quote_count = 0;
 	i = -1;
-	while (line[++i] != 0 && line[i] != ';' && line[i] != '|')
+	while (line[++i] != 0 && ((line[i] != ';' && line[i] != '|') || env))
 	{
 		if (line[i] == '=')
 			equal = i;
 		else if (line[i] == ' ' && equal == 0)
 			return ;
-		else if (line[i] == ' ' && (!quote || quote_count == 2))
+		else if (line[i] == ' ' && (!quote || quote_count == 2) && !env)
 			break ;
 		else if (line[i] == quote)
 			quote_count++;
@@ -279,7 +283,7 @@ void	save_env_var(char *line, int *count, t_data *data)
 		return ;
 	if (equal)
 	{
-		new = malloc(sizeof (t_vars));
+		new = ft_calloc(1, sizeof (t_vars));
 		if (!new)
 			cleanup(data, 2);
 		new->value = ft_strndup(line + equal + 1, end - equal - 1);
@@ -291,7 +295,7 @@ void	save_env_var(char *line, int *count, t_data *data)
 		if (!new->var)
 			cleanup(data, 2);
 		new->next = 0;
-		add_variable(&data->variables, new);
+		add_variable(data, new);
 	}
 }
 
@@ -481,7 +485,7 @@ int		*parser(char *line, t_data *data, char ***envp, S_SIG **act)
 					cleanup(data, 2);
 			}
 		}
-		save_env_var(line + j, &j, data);
+		save_env_var(line + j, &j, data, 0);
 		while (line[j] == ' ')
 			j++;
 		iter->cmd = get_cmd(line + j, &j, data);
@@ -509,6 +513,6 @@ int		*parser(char *line, t_data *data, char ***envp, S_SIG **act)
 			init_cmds(iter);
 			j++;
 		}
-	}
+	}	
 	return (0);
 }

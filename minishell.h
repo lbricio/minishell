@@ -65,13 +65,13 @@ typedef struct	data
 	t_cmds				*cmds;
 	t_vars				*variables;
 	char				**envp;
-	struct sigaction	act; //ignorar o erro do vscode
+	struct sigaction	act;
 }	t_data;
 
 extern int g_reset_fd[3];
 
 
-void	builtin_red(t_cmds  *cmds, S_SIG **act, int builtin, char **envp);
+void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp);
 void	builtin_pwd(t_cmds  *cmds);
 void	builtin_env(char **envp, t_cmds *cmds);
 
@@ -84,9 +84,9 @@ int		*parser(char *line, t_data *data, char ***envp, S_SIG **act);
 
 void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act);
 void	cleanup(t_data *data, int end);
-void	save_env_var(char *line, int *count, t_data *data);
+void	save_env_var(char *line, int *count, t_data *data, int env);
 void	substitute_variables(char **line, t_data *data);
-void	lstadd_back(t_vars **lst, t_vars *new);
+void	lstadd_back(t_data *data, t_vars *new);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	save_origin_fd();
 void	reset_input();

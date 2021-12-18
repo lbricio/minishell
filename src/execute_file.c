@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 22:50:15 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 18:49:07 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void	run_aux(t_cmds *cmds, pid_t pid, int *fd, S_SIG **act)
 	config_sigaction((void *)act, sigint_handle, SIGINT);
 }
 
-void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
+void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act, t_data *data)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -152,10 +152,11 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 			dup2(cmds->fd_out, STDOUT_FILENO);
 		if (execve(file_path, argv, envp) == -1)
 			no_file(file_path);
-		exit(errno);
+		/* exit(errno); */
 	}
 	else
 		run_aux(cmds, pid, fd, act);
+	(void)(data);
 }
 
 /* Function that take the command and send it to find_path
@@ -196,14 +197,14 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 	}
 	while (iter)
 	{
-		argv[i++] = iter->arg; // se bugar é por causa do i++;
+		argv[i++] = iter->arg;
 		iter = iter->next;
 	}
 	path = find_path(cmds->cmd, envp);
 	if (access(cmds->cmd, X_OK) == 0)
-		run(cmds->cmd, argv, envp, cmds, act);
+		run(cmds->cmd, argv, envp, cmds, act, data);
 	else if (path && cmds->cmd[0] != '.')
-		run(path, argv, envp, cmds, act);
+		run(path, argv, envp, cmds, act, data);
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		i = -1;
@@ -223,9 +224,9 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 		return(exec_no_perm(cmds));
 	}
 	free(path);
-	i = -1;
-	while (argv[++i] != 0)
-		free(argv[i]);
+	free(argv[0]);
+	if (cmds->flags)
+		free(argv[1]);
 	free(argv);
 	return (1);
 }

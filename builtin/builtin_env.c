@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 01:09:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 22:27:13 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 16:15:20 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,5 @@ void	builtin_env(char **envp, t_cmds *cmds)
 		write(fd, envp[i], ft_strlen(envp[i]));
 		write(fd, "\n", 1);
 	}
+	exit(0);
 }

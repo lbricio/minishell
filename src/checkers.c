@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/14 21:43:22 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/18 16:09:35 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,18 @@ int	cmd_error(t_cmds *cmds)
 int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 {
 	t_cmds	*iter;
+	char	*path;
 
 	iter = cmds;
 	while (iter)
 	{
+		path = find_path(iter->cmd, envp);
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
-		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || find_path(iter->cmd, envp)))
+		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || path))
 		{
 			g_reset_fd[2] = 0;
 			execute(iter, envp, act, data);
+			free(path);
 			return (0);
 		}
 		else if (!is_builtin(iter->cmd))
@@ -109,6 +112,7 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 		else if (!is_flag(iter))
 			return (flag_error(cmds));
 		iter = iter->next;
+		free(path);
 	}
 	return (1);
 }
