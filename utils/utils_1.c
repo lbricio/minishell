@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:48:45 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 18:18:41 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 19:41:48 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strnstr(const char	*big, const char *little, size_t len)
 	return (0);
 }
 
-char	*cmds_to_string(t_cmds *cmds) //FORMATO DATA
+char	*cmds_to_string(t_cmds *cmds)
 {
 	t_args	*iter;
 	char	*line;

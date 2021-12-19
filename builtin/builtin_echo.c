@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/18 17:16:01 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 19:23:18 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	ft_echo_child(t_cmds *iter)
 
 void	ft_echo_aux(t_cmds *cmds, S_SIG **act, pid_t pid, int *fd)
 {
+	wait(NULL);
 	close(fd[1]);
 	if (cmds->fd_out == 1000)
 		dup2(fd[0], STDIN_FILENO);
@@ -46,6 +47,16 @@ void	ft_echo_aux(t_cmds *cmds, S_SIG **act, pid_t pid, int *fd)
 	if (cmds->fd_out == 0)
 		reset_input();
 	(void)act;
+}
+
+void	builtin_red_mini(t_cmds *cmds, char **envp, int builtin)
+{
+	if (builtin == 1)
+		ft_echo_child(cmds);
+	else if (builtin == 2)
+		builtin_pwd(cmds);
+	else if (builtin == 3)
+		builtin_env(envp, cmds);
 }
 
 void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp)
@@ -67,17 +78,9 @@ void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp)
 		}
 		else
 			dup2(cmds->fd_out, STDOUT_FILENO);
-		if (builtin == 1)
-			ft_echo_child(cmds);
-		else if (builtin == 2)
-			builtin_pwd(cmds);
-		else if (builtin == 3)
-			builtin_env(envp, cmds);
+		builtin_red_mini(cmds, envp, builtin);
 	}
 	else
-	{
-		wait(NULL);
 		ft_echo_aux(cmds, act, pid, fd);
-	}
 	(void)act;
 }

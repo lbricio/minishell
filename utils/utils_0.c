@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_0.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 21:17:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/18 18:23:49 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 19:42:38 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-void	lstadd_back(t_data *data, t_vars *new) //FORMATO DATA
+void	lstadd_back(t_data *data, t_vars *new)
 {
 	t_vars	*last;
 
@@ -97,4 +97,3 @@ char	*ft_strndup(const char *s, int len)
 	dup[i] = 0;
 	return (dup);
 }
-

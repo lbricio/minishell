@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 18:30:42 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/18 18:06:34 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 19:41:05 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ t_vars	*get_value(t_vars *variables, char *var)
 		iter = iter->next;
 	}
 	return (0);
-	
 }
 
 int	find_env_var(char *var, char **envp)
@@ -119,13 +118,13 @@ int	builtin_export(t_cmds *cmds, t_vars **variables, char ***envp, t_data *data)
 
 	size = 0;
 	iter = cmds->args;
-	if(!(((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z')
-		|| ((char)iter->arg[0] >= 'A' && (char)iter->arg[0] <= 'Z')))
+	if (!(((char)iter->arg[0] >= 'a' && (char)iter->arg[0] <= 'z')
+			|| ((char)iter->arg[0] >= 'A' && (char)iter->arg[0] <= 'Z')))
 	{
 		write(1, "minishell: not a valid identifier", 33);
 		write(1, "\n", 1);
 		g_reset_fd[2] = 1;
-		return(0);
+		return (0);
 	}
 	while (iter)
 	{
