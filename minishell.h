@@ -107,7 +107,7 @@ char	*ft_strndup(const char *s, int len);
 char	*cmds_to_string(t_cmds *cmds);
 char	*ft_itoa(int n);
 char	*get_prompt();
-char	*ft_strword(const char *s);
+char	*ft_strword(const char *s, char *dup);
 char 	*ft_getinput(char *line, t_cmds *cmds);
 char	*ft_concat(char **dest, char *src);
 char	*ft_strchr(const char *s, int c);

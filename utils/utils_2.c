@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:49:39 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 22:16:05 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 14:30:54 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strword(const char *s)
+char	*ft_strword(const char *s, char *dup)
 {
-	char	*dup;
 	int		i;
 	int		size;
 

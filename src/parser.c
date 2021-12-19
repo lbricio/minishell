@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/18 18:43:12 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 14:29:58 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,8 +394,9 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 	{
 		while(line[i] == '<' || line[i] == ' ')
 			i++;
-		limiter = ft_strword(line + i);
+		limiter = ft_strword(line + i, limiter);
 		here_doc(limiter, act);
+		free(limiter);
 	}
 	else
 	{
@@ -403,7 +404,8 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 		|| (line[i] >= 'A' && line[i] <= 'Z')
 		|| (line[i] >= '0' && line[i] <= '9')))
 			i++;
-		outfile = ft_strword(line + i);
+		outfile = ft_strword(line + i, outfile);
+		free(outfile);
 		cmds->fd_in = open_file(outfile, 2);
 		if (cmds->fd_in == -1)
 		{
@@ -429,9 +431,8 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
-		outfile = ft_strword(line + i);
-		if (!outfile)
-			cleanup(data, 2);
+		outfile = ft_strword(line + i, outfile);
+		free(outfile);
 		cmds->fd_out = open_file(outfile, 0);
 		while ((line[i] >= 'a' && line[i] <= 'z') 
 		|| (line[i] >= 'A' && line[i] <= 'Z')
@@ -444,9 +445,8 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
-		outfile = ft_strword(line + i);
-		if (!outfile)
-			cleanup(data, 2);
+		outfile = ft_strword(line + i, outfile);
+		free(outfile);
 		cmds->fd_out = open_file(outfile, 1);
 		while ((line[i] >= 'a' && line[i] <= 'z')
 		|| (line[i] >= 'A' && line[i] <= 'Z')
