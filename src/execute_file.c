@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 18:29:22 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 19:53:01 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*find_path(char *cmd, char **envp)
 	while (envp[++i])
 	{
 		if (ft_strnstr(envp[i], "PATH", 4) != 0)
-			break;
+			break ;
 	}
 	if (envp[i])
 	{
@@ -130,7 +130,7 @@ void	run_aux(t_cmds *cmds, pid_t pid, int *fd, S_SIG **act)
 	config_sigaction((void *)act, sigint_handle, SIGINT);
 }
 
-void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act, t_data *data)
+void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -156,7 +156,6 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act, t
 	}
 	else
 		run_aux(cmds, pid, fd, act);
-	(void)(data);
 }
 
 /* Function that take the command and send it to find_path
@@ -202,9 +201,9 @@ int	execute(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 	}
 	path = find_path(cmds->cmd, envp);
 	if (access(cmds->cmd, X_OK) == 0)
-		run(cmds->cmd, argv, envp, cmds, act, data);
+		run(cmds->cmd, argv, envp, cmds, act);
 	else if (path && cmds->cmd[0] != '.')
-		run(path, argv, envp, cmds, act, data);
+		run(path, argv, envp, cmds, act);
 	else if (access(cmds->cmd, F_OK) == -1)
 	{
 		i = -1;

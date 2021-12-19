@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 18:29:21 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 19:49:29 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,42 +53,6 @@ int	is_builtin(char *cmd)
 	return (1);
 }
 
-/* caso a flag não exista, essa função é chamada para
- * printar o erro no shell e dar free no que foi alocado */
-int	flag_error(t_cmds *cmds)
-{
-	t_cmds	*iter;
-	t_cmds	*next;
-	t_args	*next_arg;
-
-	printf("%s: invalid option -- \'%s\'\n", cmds->cmd, &cmds->flags[1]);
-	iter = cmds;
-	while (iter != 0)
-	{
-		if (iter->flags)
-			free(iter->flags);
-		while (iter->args)
-		{
-			next_arg = iter->args->next;
-			free(iter->args);
-			iter->args = next_arg;
-		}
-		next = iter->next;
-		free(iter);
-		iter = next;
-	}
-	return (2);
-}
-
-/* caso o comando não exista, essa função é chamada para
- * printar o erro no shell e dar free no que foi alocado */
-int	cmd_error(t_cmds *cmds)
-{
-	printf("%s: command not found\n", cmds->cmd);
-	g_reset_fd[2] = 127;
-	return (1);
-}
-
 /* funcao para verificar se os comandos e as flags existem */
 int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 {
@@ -100,7 +64,7 @@ int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
 	{
 		path = find_path(iter->cmd, envp);
 		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
-		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || path))
+				|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || path))
 		{
 			g_reset_fd[2] = 0;
 			execute(iter, envp, act, data);

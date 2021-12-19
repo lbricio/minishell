@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 19:14:49 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 19:46:27 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,9 @@ int	main(int argc, char *argv[], char **envp)
 
 	data.variables = 0;
 	data.envp = copy_envp(envp);
-	if (!data.envp)
-		return (1);
+	if (argc != 1 || argv[1])
+		return (0);
 	initialize_vars(&data, envp);
-	/* t_vars *iter;
-	iter = data.variables;
-	while (iter)
-	{
-		printf("%s=%s\n", iter->var, iter->value);
-		iter = iter->next;
-	} */
 	config_sigaction(&act, sigint_handle, SIGINT);
 	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
 	while (1)
@@ -136,6 +129,4 @@ int	main(int argc, char *argv[], char **envp)
 		cleanup(&data, 0);
 	}
 	rl_clear_history();
-	(void)argc;
-	(void)argv;
 }

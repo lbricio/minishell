@@ -125,6 +125,8 @@ int		no_file(char *file);
 int		sintax_error(void);
 int		exec_no_file(t_cmds *cmds);
 int		exec_no_perm(t_cmds *cmds);
+int		flag_error(t_cmds *cmds);
+int		cmd_error(t_cmds *cmds);
 
 
 #endif
