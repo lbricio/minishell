@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:18:59 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/18 18:49:07 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 15:59:00 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void	run(char *file_path, char **argv, char **envp, t_cmds *cmds, S_SIG **act, t
 			dup2(cmds->fd_out, STDOUT_FILENO);
 		if (execve(file_path, argv, envp) == -1)
 			no_file(file_path);
-		/* exit(errno); */
+		exit(errno);
 	}
 	else
 		run_aux(cmds, pid, fd, act);

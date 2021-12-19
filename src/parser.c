@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 14:29:58 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 16:03:00 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,8 +405,8 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 		|| (line[i] >= '0' && line[i] <= '9')))
 			i++;
 		outfile = ft_strword(line + i, outfile);
-		free(outfile);
 		cmds->fd_in = open_file(outfile, 2);
+		free(outfile);
 		if (cmds->fd_in == -1)
 		{
 			no_file(outfile);
@@ -432,8 +432,8 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
 		outfile = ft_strword(line + i, outfile);
-		free(outfile);
 		cmds->fd_out = open_file(outfile, 0);
+		free(outfile);
 		while ((line[i] >= 'a' && line[i] <= 'z') 
 		|| (line[i] >= 'A' && line[i] <= 'Z')
 		|| (line[i] >= '0' && line[i] <= '9'))
@@ -446,8 +446,8 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
 		outfile = ft_strword(line + i, outfile);
-		free(outfile);
 		cmds->fd_out = open_file(outfile, 1);
+		free(outfile);
 		while ((line[i] >= 'a' && line[i] <= 'z')
 		|| (line[i] >= 'A' && line[i] <= 'Z')
 		|| (line[i] >= '0' && line[i] <= '9'))
