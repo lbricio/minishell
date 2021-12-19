@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 16:03:00 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 17:38:24 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,8 @@ int			sintax_check(char *line)
 	{
 		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
 			error = sintax_check_aux(line, i);
+		if (error == -1)
+			break ;
 		i++;
 	}
 	if (error == -1)
@@ -394,6 +396,7 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 	{
 		while(line[i] == '<' || line[i] == ' ')
 			i++;
+		outfile = malloc(50);
 		limiter = ft_strword(line + i, limiter);
 		here_doc(limiter, act);
 		free(limiter);
@@ -404,18 +407,20 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 		|| (line[i] >= 'A' && line[i] <= 'Z')
 		|| (line[i] >= '0' && line[i] <= '9')))
 			i++;
+		outfile = malloc(50);
 		outfile = ft_strword(line + i, outfile);
 		cmds->fd_in = open_file(outfile, 2);
-		free(outfile);
 		if (cmds->fd_in == -1)
 		{
 			no_file(outfile);
 			write(1, "\n", 1);
 			g_reset_fd[2] = 127;
+			free(outfile);
 			return ("");
 		}
 		
 	}
+	free(outfile);
 	return(remove_input_char(&line[0]));
 }
 
@@ -431,6 +436,7 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
+		outfile = malloc(100);
 		outfile = ft_strword(line + i, outfile);
 		cmds->fd_out = open_file(outfile, 0);
 		free(outfile);
@@ -445,6 +451,7 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
+		outfile = malloc(100);
 		outfile = ft_strword(line + i, outfile);
 		cmds->fd_out = open_file(outfile, 1);
 		free(outfile);
@@ -480,7 +487,7 @@ int		*parser(char *line, t_data *data, char ***envp, S_SIG **act)
 			iter->fd_in = 0;
 			if(strchr(line, '<'))
 			{
-				line = ft_strdup(treat_input_red(line + j, iter, act));
+				line = treat_input_red(line + j, iter, act);
 				if (!line)
 					cleanup(data, 2);
 			}

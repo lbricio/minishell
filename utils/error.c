@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 14:11:45 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/19 17:16:13 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	no_file(char *file)
 {
 	write(2, "minishell: ", 11);
 	write(2, file, ft_strlen(file));
-	write(2, " :", 2);
+	write(2, ": ", 2);
 	write(2, strerror(errno), ft_strlen(strerror(errno)));
 	return (127);
 }

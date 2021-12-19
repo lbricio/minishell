@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 19:41:34 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 22:27:46 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/19 17:02:45 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,5 @@ void	builtin_pwd(t_cmds *cmds)
 		fd = cmds->fd_out;
 	write(fd, path, ft_strlen(path));
 	write(fd, "\n", 1);
+	exit(0);
 }
