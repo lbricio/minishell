@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 12:02:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 19:46:27 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/20 11:18:57 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int	main(int argc, char *argv[], char **envp)
 	config_sigaction(&act_quit, SIG_IGN, SIGQUIT);
 	while (1)
 	{
+		data.cmds = 0;
 		line = readline("\001\033[1;33m\002Minishell> \001\033[0m\002");
 		if (!line)
 		{

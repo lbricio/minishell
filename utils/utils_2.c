@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:49:39 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/19 17:10:52 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/20 11:07:30 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ char	*ft_strword(const char *s, char *dup)
 	size = 0;
 	while ((s[size] >= 'a' && s[size] <= 'z')
 		|| (s[size] >= 'A' && s[size] <= 'Z')
-		|| (s[size] >= '0' && s[size] <= '9'))
+		|| (s[size] >= '0' && s[size] <= '9')
+		|| s[size] == '.')
 		size++;
 	dup = malloc(size + 1);
 	if (!dup)

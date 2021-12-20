@@ -6,7 +6,7 @@
 /*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/14 22:16:48 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/20 11:31:03 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ int	mini_gnl(char **line)
 	buffer[i] = '\n';
 	buffer[++i] = '\0';
 	*line = buffer;
-	free(buffer);
 	return (r);
 }
 
-void	heredoc_child(S_SIG **act, int *fd, int pid, int status)
+void	heredoc_child(S_SIG **act, int *fd, int pid)
 {
+	int	status;
+
 	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO);
 	waitpid(pid, &status, 0);
@@ -50,16 +51,19 @@ void	heredoc_child(S_SIG **act, int *fd, int pid, int status)
 	config_sigaction((void *)act, sigint_handle, SIGINT);
 }
 
+void	config_signals(S_SIG **act)
+{
+	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
+	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
+}
+
 void	here_doc(char *limiter, S_SIG **act)
 {
 	pid_t	pid;
 	int		fd[2];
-	int		status;
 	char	*line;
 
-	status = 0;
-	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
-	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
+	config_signals(act);
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
@@ -69,13 +73,17 @@ void	here_doc(char *limiter, S_SIG **act)
 		while (mini_gnl(&line))
 		{
 			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+			{
+				free(line);
 				break ;
+			}
 			write(fd[1], line, ft_strlen(line));
+			free(line);
 		}
 		exit(errno);
 	}
 	else
-		heredoc_child(act, fd, pid, status);
+		heredoc_child(act, fd, pid);
 }
 
 // NECESSÁRIO ADAPTAR PARA FORMATO DATA

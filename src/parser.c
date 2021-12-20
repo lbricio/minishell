@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:09:19 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 18:29:19 by lbricio-         ###   ########.fr       */
+/*   Updated: 2021/12/20 11:53:05 by felipe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,7 +277,7 @@ void	save_env_var(char *line, int *count, t_data *data, int env)
 	end = i;
 	while (line[i] == ' ')
 		i++;
-	if (equal)
+	if (equal && count)
 		(*count) += end;
 	if (line[i] != 0 && line[i] != ';')
 		return ;
@@ -372,7 +372,8 @@ char	*remove_input_char(char *line)
 		i++;
 	while ((line[i] >= 'a' && line[i] <= 'z')
 	|| (line[i] >= 'A' && line[i] <= 'Z')
-	|| (line[i] >= '0' && line[i] <= '9'))
+	|| (line[i] >= '0' && line[i] <= '9')
+	|| line[i] == '.')
 	{
 		line[i] = ' ';
 		i++;
@@ -397,6 +398,7 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 		while(line[i] == '<' || line[i] == ' ')
 			i++;
 		outfile = malloc(50);
+		limiter = 0;
 		limiter = ft_strword(line + i, limiter);
 		here_doc(limiter, act);
 		free(limiter);
@@ -405,9 +407,10 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 	{
 		while (!((line[i] >= 'a' && line[i] <= 'z')
 		|| (line[i] >= 'A' && line[i] <= 'Z')
-		|| (line[i] >= '0' && line[i] <= '9')))
+		|| (line[i] >= '0' && line[i] <= '9')
+		|| line[i] == '.'))
 			i++;
-		outfile = malloc(50);
+		outfile = 0;
 		outfile = ft_strword(line + i, outfile);
 		cmds->fd_in = open_file(outfile, 2);
 		if (cmds->fd_in == -1)
@@ -418,13 +421,12 @@ char 	*treat_input_red(char *line, t_cmds *cmds, S_SIG **act)
 			free(outfile);
 			return ("");
 		}
-		
 	}
 	free(outfile);
 	return(remove_input_char(&line[0]));
 }
 
-void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
+void		get_redirect(char *line, int *count, t_cmds *cmds)
 {
 	char 	*outfile;
 	int		i;
@@ -436,13 +438,14 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
-		outfile = malloc(100);
+		outfile = 0;
 		outfile = ft_strword(line + i, outfile);
 		cmds->fd_out = open_file(outfile, 0);
 		free(outfile);
 		while ((line[i] >= 'a' && line[i] <= 'z') 
 		|| (line[i] >= 'A' && line[i] <= 'Z')
-		|| (line[i] >= '0' && line[i] <= '9'))
+		|| (line[i] >= '0' && line[i] <= '9')
+		|| line[i] == '.')
 			i++;
 		(*count) += i;
 	}
@@ -451,18 +454,19 @@ void		get_redirect(char *line, int *count, t_cmds *cmds, t_data *data)
 		i = 0;
 		while (line [i] == '>' || line[i] == ' ')
 			i++;
-		outfile = malloc(100);
+		outfile = 0;
 		outfile = ft_strword(line + i, outfile);
 		cmds->fd_out = open_file(outfile, 1);
 		free(outfile);
 		while ((line[i] >= 'a' && line[i] <= 'z')
 		|| (line[i] >= 'A' && line[i] <= 'Z')
-		|| (line[i] >= '0' && line[i] <= '9'))
+		|| (line[i] >= '0' && line[i] <= '9')
+		|| line[i] == '.')
 			i++;
 		(*count) += i;
 	}
 	else
-		cmds->fd_out = 0;
+		cmds->fd_out = 1;
 }
 
 int		*parser(char *line, t_data *data, char ***envp, S_SIG **act)
@@ -505,7 +509,7 @@ int		*parser(char *line, t_data *data, char ***envp, S_SIG **act)
 		iter->args = get_args(line + j, &j, data);
 		while (line[j] == ' ')
 			j++;
-		get_redirect(line + j, &j, iter, data);
+		get_redirect(line + j, &j, iter);
 		while (line[j] == ' ')
 			j++;
 		if (iter->cmd[0] != '\0')

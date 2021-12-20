@@ -35,7 +35,7 @@ CFLAGS		= -Wall -Werror -Wextra
 LIBS		= -lreadline
 
 .c.o:
-			$(CC) -c $< -o $(<:.c=.o)
+			$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
 all:		$(NAME)
 
