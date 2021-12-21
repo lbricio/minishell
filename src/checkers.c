@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/20 11:15:55 by felipe           ###   ########.fr       */
+/*   Updated: 2021/12/21 12:56:41 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,21 @@ int	is_flag(t_cmds *cmds)
 // funcao para verificar se o comando passado é um builtin
 int	is_builtin(char *cmd)
 {
-	int	len;
-
 	if (cmd)
 	{
-		len = ft_strlen(cmd);
-		if (!ft_strncmp(cmd, "echo", len))
+		if (check_builtin_name(cmd, "echo"))
 			return (1);
-		else if (!ft_strncmp(cmd, "cd", len))
+		else if (check_builtin_name(cmd, "cd"))
 			return (1);
-		else if (!ft_strncmp(cmd, "pwd", len))
+		else if (check_builtin_name(cmd, "pwd"))
 			return (1);
-		else if (!ft_strncmp(cmd, "export", len))
+		else if (check_builtin_name(cmd, "export"))
 			return (1);
-		else if (!ft_strncmp(cmd, "unset", len))
+		else if (check_builtin_name(cmd, "unset"))
 			return (1);
-		else if (!ft_strncmp(cmd, "env", len))
+		else if (check_builtin_name(cmd, "env"))
 			return (1);
-		else if (!ft_strncmp(cmd, "exit", len))
+		else if (check_builtin_name(cmd, "exit"))
 			return (1);
 		return (0);
 	}

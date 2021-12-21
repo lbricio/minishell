@@ -118,6 +118,7 @@ int		execute(t_cmds *cmds, char **envp, S_SIG **act, t_data *data);
 int		check_quotation(char *line, t_data *data);
 int		open_file(char *argv, int i);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		check_builtin_name(char *cmd, char *name);
 int		exit_error(int err, char *arg);
 int		ft_atoi(const char *str);
 int		ft_strlen(char *str);
