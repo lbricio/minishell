@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/27 16:19:45 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 18:29:23 by lbricio-         ###   ########.fr       */
+/*   Created: 2022/01/03 11:18:39 by lufelipe          #+#    #+#             */
+/*   Updated: 2022/01/03 11:26:18 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act)
+void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, t_sig **act)
 {
 	t_cmds	*iter;
 
@@ -36,7 +36,32 @@ void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, S_SIG **act)
 		else if (iter->cmd[0] == '.')
 			execute(iter, *envp, act, data);
 		else if (find_path(iter->cmd, *envp))
-			(execute(iter, *envp, act, data)); //segundo EXECUTE
+			(execute(iter, *envp, act, data));
 		iter = iter->next;
 	}
+}
+
+void	executor(t_data *data, char ***envp, t_sig **act)
+{
+	t_cmds	*iter;
+	char	*path;
+
+	iter = data->cmds;
+	while (iter)
+	{
+		path = find_path(iter->cmd, *envp);
+		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.' \
+		|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || path) \
+		&& iter->cmd[0] != 0)
+		{
+			g_reset_fd[2] = 0;
+			execute(iter, *envp, act, data);
+		}
+		else if (iter->cmd[0] != 0)
+			exec_builtin(iter, data, envp, act);
+		iter = iter->next;
+		free(path);
+	}
+	reset_input();
+	reset_output();
 }

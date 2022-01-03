@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/14 19:29:34 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/19 19:42:14 by lbricio-         ###   ########.fr       */
+/*   Created: 2022/01/03 11:20:12 by lufelipe          #+#    #+#             */
+/*   Updated: 2022/01/03 11:20:13 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,8 @@ void	cleanup(t_data *data, int end)
 	if (end)
 		cleanup_variables(data);
 	if (end == 2)
+	{
+		rl_clear_history();
 		exit(2);
+	}
 }

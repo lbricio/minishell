@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/20 11:31:03 by felipe           ###   ########.fr       */
+/*   Updated: 2022/01/03 11:26:18 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	mini_gnl(char **line)
 	return (r);
 }
 
-void	heredoc_child(S_SIG **act, int *fd, int pid)
+void	heredoc_child(t_sig **act, int *fd, int pid)
 {
 	int	status;
 
@@ -51,13 +51,13 @@ void	heredoc_child(S_SIG **act, int *fd, int pid)
 	config_sigaction((void *)act, sigint_handle, SIGINT);
 }
 
-void	config_signals(S_SIG **act)
+void	config_signals(t_sig **act)
 {
 	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
 	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
 }
 
-void	here_doc(char *limiter, S_SIG **act)
+void	here_doc(char *limiter, t_sig **act)
 {
 	pid_t	pid;
 	int		fd[2];

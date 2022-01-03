@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/21 22:58:18 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/20 10:49:26 by felipe           ###   ########.fr       */
+/*   Created: 2022/01/03 11:16:58 by lufelipe          #+#    #+#             */
+/*   Updated: 2022/01/03 11:26:18 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_echo_child(t_cmds *iter)
 	exit(errno);
 }
 
-void	ft_echo_aux(t_cmds *cmds, S_SIG **act, pid_t pid, int *fd)
+void	ft_echo_aux(t_cmds *cmds, t_sig **act, pid_t pid, int *fd)
 {
 	wait(NULL);
 	close(fd[1]);
@@ -59,7 +59,7 @@ void	builtin_red_mini(t_cmds *cmds, char **envp, int builtin)
 		builtin_env(envp, cmds);
 }
 
-void	builtin_red(t_cmds *cmds, S_SIG **act, int builtin, char **envp)
+void	builtin_red(t_cmds *cmds, t_sig **act, int builtin, char **envp)
 {
 	pid_t	pid;
 	int		fd[2];

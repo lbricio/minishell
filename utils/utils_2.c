@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:49:39 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/20 11:07:30 by felipe           ###   ########.fr       */
+/*   Updated: 2022/01/03 11:21:35 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strword(const char *s, char *dup)
 	if (!dup)
 		return (0);
 	i = 0;
-	while (i != size)
+	while (i < size)
 	{
 		dup[i] = s[i];
 		i++;
@@ -102,4 +102,31 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	joined[len2 + len1] = 0;
 	return (joined);
+}
+
+// funcao para verificar se o comando passado é um builtin
+int	is_builtin(char *cmd)
+{
+	int	len;
+
+	if (cmd)
+	{
+		len = ft_strlen(cmd);
+		if (!ft_strncmp(cmd, "echo", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "cd", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "pwd", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "export", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "unset", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "env", len))
+			return (1);
+		else if (!ft_strncmp(cmd, "exit", len))
+			return (1);
+		return (0);
+	}
+	return (1);
 }

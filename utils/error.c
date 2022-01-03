@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2021/12/19 19:48:21 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/03 11:41:22 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,13 @@ int	flag_error(t_cmds *cmds)
 int	cmd_error(t_cmds *cmds)
 {
 	printf("%s: command not found\n", cmds->cmd);
+	g_reset_fd[2] = 127;
+	return (1);
+}
+
+int	file_error(t_cmds *cmds)
+{
+	printf("%s: No such file or directory\n", cmds->cmd);
 	g_reset_fd[2] = 127;
 	return (1);
 }

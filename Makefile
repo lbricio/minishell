@@ -1,12 +1,21 @@
 SRCS		=	src/checkers.c\
+				src/execute_file_utils.c\
+				src/execute_file_utils2.c\
 				src/execute_file.c\
 				src/executor.c\
+				src/get_args.c\
 				src/minishell.c\
+				src/parser_utils.c\
+				src/parser_utils2.c\
 				src/parser.c\
+				src/redirects.c\
+				src/save_env_var.c\
 				src/signals.c\
+				src/sintax_check.c\
 				src/substitute_vars.c\
 				builtin/builtin_echo.c\
 				builtin/builtin_exit.c\
+				builtin/builtin_export_utils.c\
 				builtin/builtin_export.c\
 				builtin/builtin_unset.c\
 				builtin/builtin_cd.c\

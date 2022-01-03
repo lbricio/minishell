@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: felipe <felipe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/27 16:11:27 by felipe            #+#    #+#             */
-/*   Updated: 2021/12/20 11:15:55 by felipe           ###   ########.fr       */
+/*   Created: 2022/01/03 11:18:15 by lufelipe          #+#    #+#             */
+/*   Updated: 2022/01/03 11:40:57 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,59 +26,34 @@ int	is_flag(t_cmds *cmds)
 	return (1);
 }
 
-// funcao para verificar se o comando passado é um builtin
-int	is_builtin(char *cmd)
-{
-	int	len;
-
-	if (cmd)
-	{
-		len = ft_strlen(cmd);
-		if (!ft_strncmp(cmd, "echo", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "cd", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "pwd", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "export", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "unset", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "env", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "exit", len))
-			return (1);
-		return (0);
-	}
-	return (1);
-}
-
 /* funcao para verificar se os comandos e as flags existem */
-int	check_cmds(t_cmds *cmds, char **envp, S_SIG **act, t_data *data)
+int	check_cmds(t_cmds *cmds, char **envp)
 {
-	t_cmds	*iter;
 	char	*path;
 
-	iter = cmds;
-	while (iter)
+	if (cmds)
 	{
-		path = find_path(iter->cmd, envp);
-		if (!is_builtin(iter->cmd) && (iter->cmd[0] == '.'
-				|| iter->cmd[0] == '~' || iter->cmd[0] == '/' || path))
+		path = find_path(cmds->cmd, envp);
+		if (!is_builtin(cmds->cmd) && (cmds->cmd[0] == '.' \
+		|| cmds->cmd[0] == '~' || cmds->cmd[0] == '/' || path))
 		{
-			g_reset_fd[2] = 0;
-			execute(iter, envp, act, data);
-			free(path);
-			return (0);
+			if (access(cmds->cmd, F_OK) == -1 \
+			&& access(path, F_OK) == -1)
+			{
+				free(path);
+				return (file_error(cmds));
+			}
 		}
-		else if (!is_builtin(iter->cmd))
-			return (cmd_error(cmds));
-		else if (!is_flag(iter))
-			return (flag_error(cmds));
-		iter = iter->next;
-		free(path);
+		else
+		{
+			free(path);
+			if (!is_builtin(cmds->cmd))
+				return (cmd_error(cmds));
+			else if (!is_flag(cmds))
+				return (flag_error(cmds));
+		}
 	}
-	return (1);
+	return (0);
 }
 
 /* verifica se há uma quantidade par da primeira aspas encontrada
@@ -108,13 +83,8 @@ int	check_quotation(char *line, t_data *data)
 	return (0);
 }
 
-int	check_unspecified_chars(char *line, t_data *data)
+int	check_redirects(char *line)
 {
-	int	quote;
-	int	i;
-
-	quote = 0;
-	i = -1;
 	if (ft_strnstr(line, "<<<", ft_strlen(line)))
 	{
 		printf("syntax error near unexpected token '<'\n");
@@ -125,6 +95,18 @@ int	check_unspecified_chars(char *line, t_data *data)
 		printf("syntax error near unexpected token '>'\n");
 		return (-1);
 	}
+	return (0);
+}
+
+int	check_unspecified_chars(char *line, t_data *data)
+{
+	int	quote;
+	int	i;
+
+	if (check_redirects(line) == -1)
+		return (-1);
+	quote = 0;
+	i = -1;
 	while (line[++i] != 0)
 	{
 		if (line[i] == '"' && !quote)
