@@ -6,7 +6,7 @@
 /*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:15 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:40:57 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/03 19:29:37 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,27 @@ int	check_cmds(t_cmds *cmds, char **envp)
 {
 	char	*path;
 
-	if (cmds)
+	if (!cmds)
+		return (0);
+	path = find_path(cmds->cmd, envp);
+	if (!is_builtin(cmds->cmd) && (cmds->cmd[0] == '.' \
+	|| cmds->cmd[0] == '~' || cmds->cmd[0] == '/' || path))
 	{
-		path = find_path(cmds->cmd, envp);
-		if (!is_builtin(cmds->cmd) && (cmds->cmd[0] == '.' \
-		|| cmds->cmd[0] == '~' || cmds->cmd[0] == '/' || path))
-		{
-			if (access(cmds->cmd, F_OK) == -1 \
-			&& access(path, F_OK) == -1)
-			{
-				free(path);
-				return (file_error(cmds));
-			}
-		}
-		else
+		if (access(cmds->cmd, F_OK) == -1 \
+		&& (cmds->cmd[0] == '.' || access(path, F_OK) == -1))
 		{
 			free(path);
-			if (!is_builtin(cmds->cmd))
-				return (cmd_error(cmds));
-			else if (!is_flag(cmds))
-				return (flag_error(cmds));
+			return (file_error(cmds));
 		}
+		free(path);
+	}
+	else
+	{
+		free(path);
+		if (!is_builtin(cmds->cmd))
+			return (cmd_error(cmds));
+		else if (!is_flag(cmds))
+			return (flag_error(cmds));
 	}
 	return (0);
 }

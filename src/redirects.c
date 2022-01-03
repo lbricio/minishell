@@ -6,7 +6,7 @@
 /*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:30 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:26:18 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/03 19:24:09 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,27 @@ static char	*remove_input_char(char *line)
 	return (line);
 }
 
-static char	*treat_input_utils(char *line, char **outfile, int i, t_cmds *cmds)
+static char	*treat_input_utils(char *line, int i, t_cmds *cmds)
 {
+	char	*outfile;
+
 	while (!((line[i] >= 'a' && line[i] <= 'z') \
 	|| (line[i] >= 'A' && line[i] <= 'Z') \
 	|| (line[i] >= '0' && line[i] <= '9') \
 	|| line[i] == '.'))
 		i++;
-	*outfile = 0;
-	*outfile = ft_strword(line + i, *outfile);
-	cmds->fd_in = open_file(*outfile, 2);
+	outfile = 0;
+	outfile = ft_strword(line + i, outfile);
+	cmds->fd_in = open_file(outfile, 2);
 	if (cmds->fd_in == -1)
 	{
-		no_file(*outfile);
+		no_file(outfile);
 		write(1, "\n", 1);
 		g_reset_fd[2] = 127;
-		free(*outfile);
+		free(outfile);
 		return ("");
 	}
+	free(outfile);
 	return (0);
 }
 
@@ -67,7 +70,6 @@ static char	*treat_input_utils(char *line, char **outfile, int i, t_cmds *cmds)
 // em whitespaces
 char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act)
 {
-	char	*outfile;
 	char	*limiter;
 	int		i;
 
@@ -86,9 +88,8 @@ char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act)
 		free(limiter);
 	}
 	else
-		if (treat_input_utils(line, &outfile, i, cmds) != 0)
+		if (treat_input_utils(line, i, cmds) != 0)
 			return ("");
-	free(outfile);
 	return (remove_input_char(&line[0]));
 }
 
