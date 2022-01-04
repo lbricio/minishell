@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:23 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/04 16:16:25 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/04 20:26:29 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,9 @@ int	parser(char *line, t_data *data, char ***envp, t_sig **act)
 				clear_line(line);
 		parser_utils(data, line, iter, &j);
 		if (iter->cmd[0] != '\0')
-			if (check_cmds(iter, *envp))
-				return (-1);
+			if (line[j] != '<' && line[j] != '>')
+				if (check_cmds(iter, *envp))
+					return (-1);
 		if (line[j] == '|' && line[j + 1] != '|')
 			j += create_new_cmds(&iter, data);
 	}

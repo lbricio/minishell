@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/03 11:26:18 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/04 20:19:22 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	heredoc_child(t_sig **act, int *fd, int pid)
 
 void	config_signals(t_sig **act)
 {
-	config_sigaction((void *)act, handle_sigquit, SIGQUIT);
+	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
 	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
 }
 

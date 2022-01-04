@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:49:39 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/03 11:21:35 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/04 20:21:06 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (joined);
 }
 
-// funcao para verificar se o comando passado é um builtin
 int	is_builtin(char *cmd)
 {
 	int	len;

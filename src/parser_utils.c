@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:08 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 19:17:32 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/04 20:31:36 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/* funcao para inicializar todos as variaveis da struct t_cmds */
 void	init_cmds(t_cmds *cmds)
 {
 	cmds->cmd = 0;
@@ -23,7 +22,6 @@ void	init_cmds(t_cmds *cmds)
 	cmds->next = 0;
 }
 
-/* funcao para remover um char. Usada para remover as aspas */
 void	remove_char(char *s, char c)
 {
 	int	writer;
@@ -40,7 +38,6 @@ void	remove_char(char *s, char c)
 	s[writer] = 0;
 }
 
-/* retorna o primeiro tipo de aspas encontrada */
 char	get_quote(char *line)
 {
 	int	i;
@@ -56,7 +53,6 @@ char	get_quote(char *line)
 	return (0);
 }
 
-/* funçao para retornar um comando como string */
 char	*get_cmd(char *line, int *count, t_data *data)
 {
 	char	*cmd;
@@ -67,8 +63,9 @@ char	*get_cmd(char *line, int *count, t_data *data)
 	i = 0;
 	while (line[i] == ' ')
 		i++;
-	while ((line[i] != 0 && line[i] != ' ' && \
-	line[i] != '|' && line[i] != ';') || quote)
+	while ((line[i] != 0 && line[i] != ' '
+			&& line[i] != '|' && line[i] != ';'
+			&& line[i] != '<' && line[i] != '>') || quote)
 	{
 		if ((line[i] == '\'' || line[i] == '"') && !quote)
 			quote = line[i];
