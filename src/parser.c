@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:23 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/04 16:07:38 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/04 16:16:25 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	parser_utils(t_data *data, char *line, t_cmds *iter, int *j)
 
 void	clear_line(char *line)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (line[j] != '\0')
