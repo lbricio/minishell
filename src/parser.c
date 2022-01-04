@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:23 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:38:49 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/04 16:07:38 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,15 @@ void	parser_utils(t_data *data, char *line, t_cmds *iter, int *j)
 		(*j)++;
 }
 
+void	clear_line(char *line)
+{
+	int j;
+
+	j = 0;
+	while (line[j] != '\0')
+		line[j++] = ' ';
+}
+
 int	parser(char *line, t_data *data, char ***envp, t_sig **act)
 {
 	t_cmds	*iter;
@@ -67,7 +76,7 @@ int	parser(char *line, t_data *data, char ***envp, t_sig **act)
 			j++;
 		if (get_quote(line) == 0)
 			if (!check_sintax(line + j, iter, data, act))
-				break ;
+				clear_line(line);
 		parser_utils(data, line, iter, &j);
 		if (iter->cmd[0] != '\0')
 			if (check_cmds(iter, *envp))

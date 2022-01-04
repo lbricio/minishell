@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/03 11:41:22 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/04 14:10:21 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	no_file(char *file)
 
 int	sintax_error(void)
 {
-	write(1, "sintax error", 13);
+	write(1, "sintax error near unexpected token", 35);
 	write(1, "\n", 1);
 	g_reset_fd[2] = 2;
 	return (-1);

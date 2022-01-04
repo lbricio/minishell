@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:15 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 19:29:37 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/04 16:07:13 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,28 +83,11 @@ int	check_quotation(char *line, t_data *data)
 	return (0);
 }
 
-int	check_redirects(char *line)
-{
-	if (ft_strnstr(line, "<<<", ft_strlen(line)))
-	{
-		printf("syntax error near unexpected token '<'\n");
-		return (-1);
-	}
-	if (ft_strnstr(line, ">>>", ft_strlen(line)))
-	{
-		printf("syntax error near unexpected token '>'\n");
-		return (-1);
-	}
-	return (0);
-}
-
 int	check_unspecified_chars(char *line, t_data *data)
 {
 	int	quote;
 	int	i;
 
-	if (check_redirects(line) == -1)
-		return (-1);
 	quote = 0;
 	i = -1;
 	while (line[++i] != 0)
