@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:23 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 16:54:50 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/06 16:58:10 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ int	check_sintax(char *line, t_cmds *iter, t_data *data, t_sig **act)
 	{
 		line = treat_input_red(line, iter, act);
 		if (!line)
+		{
+			cleanup(data, 2);
 			return (0);
+		}
 	}
 	return (1);
-	(void)data;
 }
 
 int	create_new_cmds(t_cmds **iter, t_data *data)
@@ -86,7 +88,7 @@ int	parser(char *line, t_data *data, char ***envp, t_sig **act)
 			j++;
 		if (get_quote(line) == 0)
 			if (!check_sintax(line + j, iter, data, act))
-				clear_line(line + j);
+				clear_line(line);
 		j = parser_utils(data, line, iter, &j);
 		if (iter->cmd[0] != '\0')
 			if (check_cmds(iter, *envp))
