@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:23 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/04 20:26:29 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/06 16:54:50 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ int	check_sintax(char *line, t_cmds *iter, t_data *data, t_sig **act)
 	{
 		line = treat_input_red(line, iter, act);
 		if (!line)
-			cleanup(data, 2);
+			return (0);
 	}
 	return (1);
+	(void)data;
 }
 
 int	create_new_cmds(t_cmds **iter, t_data *data)
@@ -36,8 +37,10 @@ int	create_new_cmds(t_cmds **iter, t_data *data)
 	return (1);
 }
 
-void	parser_utils(t_data *data, char *line, t_cmds *iter, int *j)
+int	parser_utils(t_data *data, char *line, t_cmds *iter, int *j)
 {
+	int	i;
+
 	while (line[*j] == ' ')
 		(*j)++;
 	save_env_var(line + *j, j, data, 0);
@@ -45,9 +48,16 @@ void	parser_utils(t_data *data, char *line, t_cmds *iter, int *j)
 	remove_char(iter->cmd, get_quote(iter->cmd));
 	iter->flags = get_flags(line + *j, j, data);
 	iter->args = get_args(line + *j, j, data);
-	get_redirect(line + *j, j, iter);
+	while (line[*j] == '>')
+	{
+		get_redirect(line + *j, j, iter);
+		while (line[*j] == ' ')
+			(*j)++;
+	}
 	while (line[*j] == ' ')
-		(*j)++;
+	(*j)++;
+	i = *j;
+	return (i);
 }
 
 void	clear_line(char *line)
@@ -76,12 +86,11 @@ int	parser(char *line, t_data *data, char ***envp, t_sig **act)
 			j++;
 		if (get_quote(line) == 0)
 			if (!check_sintax(line + j, iter, data, act))
-				clear_line(line);
-		parser_utils(data, line, iter, &j);
+				clear_line(line + j);
+		j = parser_utils(data, line, iter, &j);
 		if (iter->cmd[0] != '\0')
-			if (line[j] != '<' && line[j] != '>')
-				if (check_cmds(iter, *envp))
-					return (-1);
+			if (check_cmds(iter, *envp))
+				return (-1);
 		if (line[j] == '|' && line[j + 1] != '|')
 			j += create_new_cmds(&iter, data);
 	}

@@ -3,49 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   redirects.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:30 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 19:24:09 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/06 16:52:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// transforma < e seus argumentos em whitespaces
-static char	*remove_input_char(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
-		i++;
-	while (line[i] != '<')
-		i--;
-	if (i > 0 && line[i - 1] == '<')
-		i--;
-	while (line[i] == '<')
-	{
-		line[i] = ' ';
-		i++;
-	}
-	while (line[i] == ' ')
-		i++;
-	while ((line[i] >= 'a' && line[i] <= 'z') \
-	|| (line[i] >= 'A' && line[i] <= 'Z') \
-	|| (line[i] >= '0' && line[i] <= '9') \
-	|| line[i] == '.')
-	{
-		line[i] = ' ';
-		i++;
-	}
-	return (line);
-}
-
-static char	*treat_input_utils(char *line, int i, t_cmds *cmds)
+int	treat_input_utils(char *line, int i, t_cmds *cmds)
 {
 	char	*outfile;
 
+	while (line[i] == ' ')
+		i++;
 	while (!((line[i] >= 'a' && line[i] <= 'z') \
 	|| (line[i] >= 'A' && line[i] <= 'Z') \
 	|| (line[i] >= '0' && line[i] <= '9') \
@@ -60,21 +32,38 @@ static char	*treat_input_utils(char *line, int i, t_cmds *cmds)
 		write(1, "\n", 1);
 		g_reset_fd[2] = 127;
 		free(outfile);
-		return ("");
+		return (1);
 	}
 	free(outfile);
 	return (0);
 }
 
-// procura por < e <<, trata o input, transforma </<< e seus argumentos
-// em whitespaces
+int	red_routine(char *line, t_cmds *cmds)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] && line[i] != '|')
+	{
+		if (line[i] == '<' || line[i] == '|')
+		{
+			if (line[i] == '|')
+				return (0);
+			if (treat_input_utils(line, i, cmds) == 1)
+				return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act)
 {
 	char	*limiter;
 	int		i;
 
 	i = 0;
-	while (line[i])
+	while (line[i] && line[i] != '|')
 		i++;
 	while (line[i] != '<')
 		i--;
@@ -88,8 +77,8 @@ char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act)
 		free(limiter);
 	}
 	else
-		if (treat_input_utils(line, i, cmds) != 0)
-			return ("");
+		if (red_routine(line, cmds) == 1)
+			return (0);
 	return (remove_input_char(&line[0]));
 }
 

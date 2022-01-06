@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_args.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:45 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:18:46 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/06 16:49:49 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ t_args	*get_args(char *line, int *count, t_data *data)
 		line++;
 	}
 	i = 0;
-	while (line[i] != 0 && line[i] != '|' && line[i] != ';' && line[i] != '>')
+	while (line[i] != 0 && line[i] != '|' && line[i] != ';'
+		&& line[i] != '>' && line[i] != '<')
 	{
 		i += get_args_utils(data, line, i, iter);
 		remove_char(iter->arg, get_quote(iter->arg));

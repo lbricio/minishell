@@ -11,6 +11,7 @@ SRCS		=	src/checkers.c\
 				src/redirects.c\
 				src/save_env_var.c\
 				src/signals.c\
+				src/signals_2.c\
 				src/sintax_check.c\
 				src/substitute_vars.c\
 				builtin/builtin_echo.c\
