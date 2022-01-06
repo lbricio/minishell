@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:21:48 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 16:53:10 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/06 17:12:03 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,5 +147,5 @@ int		flag_error(t_cmds *cmds);
 int		cmd_error(t_cmds *cmds);
 void	heredoc_sigquit(int sig);
 char	*remove_input_char(char *line);
-
+int		is_builtin(char *cmd);
 #endif

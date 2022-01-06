@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:49:39 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/04 20:21:06 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/06 17:08:29 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,30 +102,4 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	joined[len2 + len1] = 0;
 	return (joined);
-}
-
-int	is_builtin(char *cmd)
-{
-	int	len;
-
-	if (cmd)
-	{
-		len = ft_strlen(cmd);
-		if (!ft_strncmp(cmd, "echo", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "cd", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "pwd", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "export", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "unset", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "env", len))
-			return (1);
-		else if (!ft_strncmp(cmd, "exit", len))
-			return (1);
-		return (0);
-	}
-	return (1);
 }

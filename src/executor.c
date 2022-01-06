@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:39 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:26:18 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/06 17:11:53 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,38 @@ void	executor(t_data *data, char ***envp, t_sig **act)
 	}
 	reset_input();
 	reset_output();
+}
+
+int check_builtin_name(char *cmd, char *name)
+{
+
+	if(ft_strlen(cmd) == ft_strlen(name))
+	{
+		if (!(strncmp(cmd, name, ft_strlen(cmd))))
+			return (1);
+	}
+	return (0);
+}
+
+int	is_builtin(char *cmd)
+{
+	if (cmd)
+	{
+		if (check_builtin_name(cmd, "echo"))
+			return (1);
+		else if (check_builtin_name(cmd, "cd"))
+			return (1);
+		else if (check_builtin_name(cmd, "pwd"))
+			return (1);
+		else if (check_builtin_name(cmd, "export"))
+			return (1);
+		else if (check_builtin_name(cmd, "unset"))
+			return (1);
+		else if (check_builtin_name(cmd, "env"))
+			return (1);
+		else if (check_builtin_name(cmd, "exit"))
+			return (1);
+		return (0);
+	}
+	return (1);
 }
