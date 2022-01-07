@@ -6,11 +6,20 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/07 12:42:10 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 13:35:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	mini_gnl_sigquit(void)
+{
+	write(1, "\nminihell: warning: here-document ", 35);
+	write(1, "delimited by end-of-file (wanted `eof')\n", 41);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	exit(0);
+}
 
 int	mini_gnl(char **line)
 {
@@ -31,13 +40,8 @@ int	mini_gnl(char **line)
 			break ;
 		if (c == 0 && line[0][0] == 0)
 		{
-			if(g_reset_fd[2] != 42)
-			{
-				write(1, "\nminihell: warning: here-document delimited by end-of-file (wanted `eof')\n", 75);
-				rl_replace_line("", 0);
-				rl_on_new_line();
-				exit(0);
-			}
+			if (g_reset_fd[2] != 42)
+				mini_gnl_sigquit();
 		}
 	}
 	return (1);
