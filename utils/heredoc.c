@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/07 01:56:50 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 12:42:10 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	mini_gnl(char **line)
 		line[0][i] = c;
 		if (c == '\n')
 			break ;
-		if (c == 0 && line[0][i] == 0)
+		if (c == 0 && line[0][0] == 0)
 		{
 			if(g_reset_fd[2] != 42)
 			{
@@ -56,6 +56,8 @@ int	heredoc_child(t_sig **act, int *fd, int pid, char *line)
 		free(line);
 	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
 	config_sigaction((void *)act, sigint_handle, SIGINT);
+	if (g_reset_fd[2] == 42)
+		g_reset_fd[2] = 0;
 	if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
 		g_reset_fd[2] = WEXITSTATUS(status);
 	return (g_reset_fd[2]);

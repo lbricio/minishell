@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/04 21:01:01 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/07 01:51:53 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 12:38:17 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ void	heredoc_sigquit(int sig)
 {
 	(void)sig;
 	g_reset_fd[2] = 42;
-	write(0, "\b \b", 3);
-	write(0, "\b \b", 3);
+	write(0, "\b\b  \b\b", 6);
 }
 
 /*
