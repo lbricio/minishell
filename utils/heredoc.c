@@ -6,80 +6,102 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/06 16:54:04 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 01:56:50 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	mini_gnl(char **line, t_sig **act)
+int	mini_gnl(char **line)
 {
-	char	*buffer;
+	char	c;
 	int		i;
 	int		r;
-	char	c;
 
-	i = 0;
-	r = 0;
-	buffer = (char *)malloc(10000);
-	config_sigaction((void *)act, handle_heredoc, SIGINT);
-	config_sigaction((void *)act, heredoc_sigquit, SIGQUIT);
-	if (!buffer)
-		return (-1);
-	r = read(0, &c, 1);
-	while (r && c != '\n' && c != '\0')
+	i = -1;
+	(void) r;
+	write(1, "> ", 2);
+	while (1)
 	{
-		if (c != '\n' && c != '\0')
-			buffer[i] = c;
+		g_reset_fd[2] = 0;
 		i++;
 		r = read(0, &c, 1);
+		line[0][i] = c;
+		if (c == '\n')
+			break ;
+		if (c == 0 && line[0][i] == 0)
+		{
+			if(g_reset_fd[2] != 42)
+			{
+				write(1, "\nminihell: warning: here-document delimited by end-of-file (wanted `eof')\n", 75);
+				rl_replace_line("", 0);
+				rl_on_new_line();
+				exit(0);
+			}
+		}
 	}
-	buffer[i] = '\n';
-	buffer[++i] = '\0';
-	*line = buffer;
-	return (r);
+	return (1);
 }
 
-void	heredoc_child(t_sig **act, int *fd, int pid)
+int	heredoc_child(t_sig **act, int *fd, int pid, char *line)
 {
 	int	status;
 
 	close(fd[1]);
 	dup2(fd[0], STDIN_FILENO);
+	config_sigaction((void *)act, SIG_IGN, SIGINT);
 	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
-	config_sigaction((void *)act, sigint_handle_cmd, SIGINT);
 	waitpid(pid, &status, 0);
-	if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
-		g_reset_fd[2] = WEXITSTATUS(status);
+	if (line)
+		free(line);
 	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
 	config_sigaction((void *)act, sigint_handle, SIGINT);
+	if (g_reset_fd[2] != 130 && g_reset_fd[2] != 131)
+		g_reset_fd[2] = WEXITSTATUS(status);
+	return (g_reset_fd[2]);
 }
 
-void	here_doc(char *limiter, t_sig **act)
+int	limiter_cmp(char *s1, char *s2)
+{
+	size_t	i;
+
+	if ((ft_strlen(s1) - 1) != ft_strlen(s2))
+		return (1);
+	i = 0;
+	while (s2[i] != 0)
+	{
+		if ((unsigned char)s1[i] != (unsigned char)s2[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	here_doc(char *limiter, t_sig **act)
 {
 	pid_t	pid;
 	int		fd[2];
 	char	*line;
 
+	config_sigaction((void *)act, heredoc_sigint, SIGINT);
+	config_sigaction((void *)act, heredoc_sigquit, SIGQUIT);
+	line = ft_calloc(1000, sizeof(char));
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
 		close(fd[0]);
-		while (mini_gnl(&line, act))
+		while (mini_gnl(&line))
 		{
-			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-			{
-				free(line);
+			if (limiter_cmp(line, limiter) == 0)
 				break ;
-			}
 			write(fd[1], line, ft_strlen(line));
 			free(line);
+			line = ft_calloc(1000, sizeof(char));
 		}
-		exit(errno);
+		free(line);
+		exit(0);
 	}
 	else
-		heredoc_child(act, fd, pid);
+		return (heredoc_child(act, fd, pid, line));
 }
-
-// NECESSÁRIO ADAPTAR PARA FORMATO DATA

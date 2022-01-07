@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:49:39 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/06 17:08:29 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/06 22:11:23 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,24 @@ char	*ft_strword(const char *s, char *dup)
 	return (dup);
 }
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	size_t	i;
-	char	*alloced;
+	while (len--)
+		*((unsigned char *)b + len) = (unsigned char)c;
+	return (b);
+}
 
-	if (nmemb == 0 || size == 0)
-	{
-		alloced = malloc(1);
-		*alloced = 0;
-		return (alloced);
-	}
-	alloced = malloc(nmemb * size);
-	if (!alloced)
+void	*ft_calloc(size_t count, size_t size)
+{
+	size_t	tot_size;
+	void	*dst;
+
+	tot_size = size * count;
+	dst = malloc(tot_size);
+	if (!(dst))
 		return (0);
-	i = 0;
-	while (i < nmemb * size)
-	{
-		alloced[i] = 0;
-		i++;
-	}
-	return (alloced);
+	ft_memset(dst, 0, tot_size);
+	return (dst);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)

@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:39 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 17:11:53 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 00:24:54 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,9 @@ void	executor(t_data *data, char ***envp, t_sig **act)
 	reset_output();
 }
 
-int check_builtin_name(char *cmd, char *name)
+int	check_builtin_name(char *cmd, char *name)
 {
-
-	if(ft_strlen(cmd) == ft_strlen(name))
+	if (ft_strlen(cmd) == ft_strlen(name))
 	{
 		if (!(strncmp(cmd, name, ft_strlen(cmd))))
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:30 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 16:52:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 00:11:10 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,10 @@ char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act)
 			i++;
 		limiter = 0;
 		limiter = ft_strword(line + i, limiter);
-		here_doc(limiter, act);
+		i = here_doc(limiter, act);
 		free(limiter);
+		if (i != 0)
+			return (0);
 	}
 	else
 		if (red_routine(line, cmds) == 1)

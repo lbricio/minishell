@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:21:48 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 17:12:03 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 00:11:35 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ void	handle_sigquit(int sig);
 void	sigint_handle_cmd(int sig);
 void	sigint_handle(int sig);
 void	config_sigaction(t_sig *act, void (*handler)(int), int sig);
-void	handle_heredoc(int sig_num);
-void	here_doc(char *limiter, t_sig **act);
+void	heredoc_sigint(int sig);
+int		here_doc(char *limiter, t_sig **act);
 
 char	*ft_strnstr(const char	*big, const char *little, size_t len);
 char	*get_variable(char *line, int size, t_vars *variables);

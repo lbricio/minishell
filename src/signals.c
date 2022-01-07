@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:49 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/04 21:06:34 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 00:24:11 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,12 @@ void	sigint_handle(int sig)
 	}
 }
 
-void	handle_heredoc(int sig)
+void	heredoc_sigint(int sig)
 {
 	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
 	g_reset_fd[2] = 130;
 	exit(130);
 }

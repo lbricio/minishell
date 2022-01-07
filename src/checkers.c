@@ -6,7 +6,7 @@
 /*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:15 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 17:10:51 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/06 17:48:05 by lbricio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	check_unspecified_chars(char *line, t_data *data)
 		else if (!quote && (line[i] == ';' || line[i] == '\\'))
 		{
 			cleanup(data, 0);
-			printf("syntax error near unexpected token ';'\n");
+			printf("syntax error near unexpected token\n");
 			return (-1);
 		}
 	}
