@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:01 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 15:51:22 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 21:50:28 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,24 @@ int	g_reset_fd[3];
 
 int	read_lines(char **line, t_data *data, char ***envp, t_sig **act)
 {
-	int	err;
+	t_cmds	*last;
+	int		err;
 
 	substitute_variables(line, data);
 	err = parser(*line, data, envp, act);
+	last = data->cmds;
+	while (last->next)
+	{
+		if (last->fd_in != 0)
+			break ;
+		last = last->next;
+	}
+	if (last != data->cmds && data->cmds->fd_in == 0 \
+	&& last->fd_in != 0 && last->next == 0)
+	{
+		data->cmds->fd_in = last->fd_in;
+		last->fd_in = 0;
+	}
 	free(*line);
 	return (err);
 }

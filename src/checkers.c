@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:15 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 17:48:05 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 22:08:02 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int	check_cmds(t_cmds *cmds, char **envp)
 	if (!is_builtin(cmds->cmd) && (cmds->cmd[0] == '.' \
 	|| cmds->cmd[0] == '~' || cmds->cmd[0] == '/' || path))
 	{
-		if (access(cmds->cmd, F_OK) == -1 \
-		&& (cmds->cmd[0] == '.' || access(path, F_OK) == -1))
+		if (access(cmds->cmd, F_OK) == -1 && (cmds->cmd[0] == '.' || \
+		cmds->cmd[0] == '/' || cmds->cmd[0] == '~' || access(path, F_OK) == -1))
 		{
 			free(path);
 			return (file_error(cmds));
@@ -71,9 +71,9 @@ int	check_quotation(char *line, t_data *data)
 	{
 		if (quote && line[i] == quote)
 			quote = 0;
-		else if (line[i] == '"')
+		else if (line[i] == '"' && !quote)
 			quote = '"';
-		else if (line[i] == '\'')
+		else if (line[i] == '\'' && !quote)
 			quote = '\'';
 	}
 	if (quote)

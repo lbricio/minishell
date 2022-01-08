@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:08 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 17:42:39 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:17:35 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ char	*get_cmd(char *line, int *count, t_data *data)
 
 	quote = 0;
 	i = 0;
-	while (line[i] == ' ')
+	while (ft_isspace(line[i]))
 		i++;
-	while ((line[i] != 0 && line[i] != ' '
+	while ((line[i] != 0 && !ft_isspace(line[i])
 			&& line[i] != '|' && line[i] != ';'
 			&& line[i] != '<' && line[i] != '>') || quote)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 15:48:45 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/06 16:53:15 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:18:39 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,18 +101,18 @@ char	*remove_input_char(char *line)
 	int	i;
 
 	i = 0;
-	while (line[i] && line[i] != '<')
+	while (line[i] && line[i] != '|' && line[i] != '<')
 		i++;
-	if (!line[i])
+	if (!line[i] || line[i] == '|')
 		return (line);
 	while (line[i] == '<')
 	{
 		line[i] = ' ';
 		i++;
 	}
-	while (line[i] == ' ')
+	while (ft_isspace(line[i]))
 		i++;
-	while (line[i] != ' ' && line[i])
+	while (!ft_isspace(line[i]) && line[i])
 	{
 		line[i] = ' ';
 		i++;

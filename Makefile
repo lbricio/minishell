@@ -14,6 +14,7 @@ SRCS		=	src/checkers.c\
 				src/signals_2.c\
 				src/sintax_check.c\
 				src/substitute_vars.c\
+				src/substitute_vars_utils.c\
 				builtin/builtin_echo.c\
 				builtin/builtin_exit.c\
 				builtin/builtin_export_utils.c\

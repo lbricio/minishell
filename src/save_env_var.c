@@ -6,7 +6,7 @@
 /*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:40 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:19:41 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/07 21:59:16 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ static int	get_end_var(char *line, int env, int *end, int *equal)
 	{
 		if (line[i] == '=')
 			*equal = i;
-		else if (line[i] == ' ' && *equal == 0)
+		else if (ft_isspace(line[i]) && *equal == 0)
 			return (-1);
-		else if (line[i] == ' ' && (!quote || quote_count == 2) && !env)
+		else if (ft_isspace(line[i]) && (!quote || quote_count == 2) && !env)
 			break ;
 		else if (line[i] == quote)
 			quote_count++;
@@ -90,7 +90,7 @@ void	save_env_var(char *line, int *count, t_data *data, int env)
 	i = get_end_var(line, env, &end, &equal);
 	if (i == -1)
 		return ;
-	while (line[i] == ' ')
+	while (ft_isspace(line[i]))
 		i++;
 	if (equal && count)
 		(*count) += end;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 21:22:55 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/07 13:35:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:06:01 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,15 @@ int	mini_gnl(char **line)
 	return (1);
 }
 
-int	heredoc_child(t_sig **act, int *fd, int pid, char *line)
+int	heredoc_child(t_sig **act, t_cmds *cmds, int *fd, int pid)
 {
 	int	status;
 
 	close(fd[1]);
-	dup2(fd[0], STDIN_FILENO);
+	cmds->fd_in = fd[0];
 	config_sigaction((void *)act, SIG_IGN, SIGINT);
 	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
 	waitpid(pid, &status, 0);
-	if (line)
-		free(line);
 	config_sigaction((void *)act, SIG_IGN, SIGQUIT);
 	config_sigaction((void *)act, sigint_handle, SIGINT);
 	if (g_reset_fd[2] == 42)
@@ -83,7 +81,7 @@ int	limiter_cmp(char *s1, char *s2)
 	return (0);
 }
 
-int	here_doc(char *limiter, t_sig **act)
+int	here_doc(char *limiter, t_sig **act, t_cmds *cmds)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -91,11 +89,11 @@ int	here_doc(char *limiter, t_sig **act)
 
 	config_sigaction((void *)act, heredoc_sigint, SIGINT);
 	config_sigaction((void *)act, heredoc_sigquit, SIGQUIT);
-	line = ft_calloc(1000, sizeof(char));
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
+		line = ft_calloc(1000, sizeof(char));
 		close(fd[0]);
 		while (mini_gnl(&line))
 		{
@@ -109,5 +107,5 @@ int	here_doc(char *limiter, t_sig **act)
 		exit(0);
 	}
 	else
-		return (heredoc_child(act, fd, pid, line));
+		return (heredoc_child(act, cmds, fd, pid));
 }

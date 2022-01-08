@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:39 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/07 00:24:54 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 20:01:40 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, t_sig **act)
 	t_cmds	*iter;
 
 	iter = cmds;
-	while (iter != 0)
+	if (iter != 0)
 	{
 		if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "env", 3))
 			builtin_red(cmds, act, 3, *envp);
@@ -33,11 +33,6 @@ void	exec_builtin(t_cmds *cmds, t_data *data, char ***envp, t_sig **act)
 			builtin_unset(iter, &data->variables, envp);
 		else if (ft_strlen(iter->cmd) && !ft_strncmp(iter->cmd, "cd", 2))
 			builtin_cd(iter, data->variables);
-		else if (iter->cmd[0] == '.')
-			execute(iter, *envp, act, data);
-		else if (find_path(iter->cmd, *envp))
-			(execute(iter, *envp, act, data));
-		iter = iter->next;
 	}
 }
 

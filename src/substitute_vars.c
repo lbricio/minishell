@@ -6,25 +6,11 @@
 /*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:20:04 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:20:05 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:52:11 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*get_variable(char *line, int size, t_vars *variables)
-{
-	t_vars	*iter;
-
-	iter = variables;
-	while (iter)
-	{
-		if (!ft_strncmp(iter->var, line, size))
-			return (iter->value);
-		iter = iter->next;
-	}
-	return ("");
-}
 
 char	*find_vars(char *line)
 {
@@ -35,9 +21,10 @@ char	*find_vars(char *line)
 	i = -1;
 	while (line[++i] != 0)
 	{
-		if (!quote && line[i] == '$' && (line[i + 1] != ' ' && \
+		if (!quote && ((line[i] == '$' && (!ft_isspace(line[i + 1]) && \
 		line[i + 1] != 0 && line[i + 1] != '|' && line[i + 1] != '<' \
-		&& line[i + 1] != '>'))
+		&& line[i + 1] != '>')) || (line[i] == '~' && (line[i + 1] == 0 \
+		|| ft_isspace(line[i + 1])))))
 			return (&line[i]);
 		else if (line[i] == '\'' && !quote)
 			quote = 1;
@@ -62,6 +49,14 @@ void	change_pipe_result(char **line, int i)
 	*line = temp;
 }
 
+static char	*copy_value(t_data *data, char **vars, int size)
+{
+	if ((*vars)[-1] == '~')
+		return (ft_strdup(get_variable("HOME", 4, data->variables)));
+	else
+		return (ft_strdup(get_variable((*vars), size, data->variables)));
+}
+
 void	substitute_utils(char **vars, char **line, t_data *data)
 {
 	char	*temp;
@@ -70,10 +65,10 @@ void	substitute_utils(char **vars, char **line, t_data *data)
 
 	(*vars)++;
 	size = 0;
-	while ((*vars)[size] != ' ' && (*vars)[size] != ';' && (*vars)[size] != '|'
-		&& (*vars)[size] != 0 && (*vars)[size] != '"')
+	while (!ft_isspace((*vars)[size]) && (*vars)[size] != ';' \
+	&& (*vars)[size] != '|' && (*vars)[size] != 0 && (*vars)[size] != '"')
 		size++;
-	value = ft_strdup(get_variable((*vars), size, data->variables));
+	value = copy_value(data, vars, size);
 	if (!value)
 		cleanup(data, 2);
 	(*vars)[-1] = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:23 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 19:17:01 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 22:15:42 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_sintax(char *line, t_cmds *iter, t_data *data, t_sig **act)
 	if (sintax_check(line) == -1)
 		return (0);
 	iter->fd_in = 0;
-	if (strchr(line, '<'))
+	if (ft_strchr(line, '<'))
 	{
 		line = treat_input_red(line, iter, act);
 		if (!line)
@@ -41,21 +41,15 @@ int	parser_utils(t_data *data, char *line, t_cmds *iter, int *j)
 {
 	int	i;
 
-	while (line[*j] == ' ')
+	while (ft_isspace(line[*j]))
 		(*j)++;
 	save_env_var(line + *j, j, data, 0);
 	iter->cmd = get_cmd(line + *j, j, data);
-	remove_char(iter->cmd, get_quote(iter->cmd));
 	iter->flags = get_flags(line + *j, j, data);
 	iter->args = get_args(line + *j, j, data);
-	while (line[*j] == '>')
-	{
-		get_redirect(line + *j, j, iter);
-		while (line[*j] == ' ')
-			(*j)++;
-	}
-	while (line[*j] == ' ')
-	(*j)++;
+	get_redirect(line + *j, j, iter);
+	while (ft_isspace(line[*j]))
+		(*j)++;
 	i = *j;
 	return (i);
 }
@@ -82,7 +76,7 @@ int	parser(char *line, t_data *data, char ***envp, t_sig **act)
 	j = 0;
 	while (line[j] != 0 && line[j] != ';')
 	{
-		while (line[j] == ' ')
+		while (ft_isspace(line[j]))
 			j++;
 		if (get_quote(line) == 0)
 			if (!check_sintax(line + j, iter, data, act))

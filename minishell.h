@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:21:48 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/07 00:11:35 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 22:43:37 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	remove_char(char *s, char c);
 void	init_cmds(t_cmds *cmds);
 char	*init_run(char **envp, t_cmds *cmds, int fd[], t_sig **act);
 char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act);
+char	*get_variable(char *line, int size, t_vars *variables);
 char	*get_flags(char *line, int *count, t_data *data);
 char	*get_cmd(char *line, int *count, t_data *data);
 char	*trunc_flags(char *flags, t_data *data);
@@ -84,6 +85,7 @@ int		get_flag_utils(char *line);
 int		sintax_check(char *line);
 int		file_error(t_cmds *cmds);
 int		len_list(t_args *list);
+int		ft_isspace(int c);
 
 void	builtin_red(t_cmds *cmds, t_sig **act, int builtin, char **envp);
 void	builtin_pwd(t_cmds *cmds);
@@ -111,7 +113,8 @@ void	sigint_handle_cmd(int sig);
 void	sigint_handle(int sig);
 void	config_sigaction(t_sig *act, void (*handler)(int), int sig);
 void	heredoc_sigint(int sig);
-int		here_doc(char *limiter, t_sig **act);
+int		here_doc(char *limiter, t_sig **act, t_cmds *cmds);
+// int		here_doc(char *limiter, t_sig **act);
 
 char	*ft_strnstr(const char	*big, const char *little, size_t len);
 char	*get_variable(char *line, int size, t_vars *variables);

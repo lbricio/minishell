@@ -6,7 +6,7 @@
 /*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:57 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/03 11:19:58 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/07 21:59:55 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 static int	sintax_check_aux(char *line, int i)
 {
 	i++;
-	while (line[i] == ' ')
+	while (ft_isspace(line[i]))
 		i++;
 	if (line[i] == '|' || line[i] == '>' || line[i] == '<' || line[i] == '\0' )
 	{
 		if (!((line [i] == '>' && line [i - 1] == '>') \
 		|| (line [i] == '<' && line [i - 1] == '<')))
 		{
-			while (line[i] == ' ')
+			while (ft_isspace(line[i]))
 				i++;
 			if (!((line[i] >= 'a' && line[i] <= 'z') || (line[i] >= 'A' \
 			&& line[i] <= 'Z') || (line[i] >= '0' && line[i] <= '9')))
@@ -31,7 +31,7 @@ static int	sintax_check_aux(char *line, int i)
 	}
 	else
 	{
-		while (line[i] == ' ' || line[i] == '>' || line[i] == '<')
+		while (ft_isspace(line[i]) || line[i] == '>' || line[i] == '<')
 			i++;
 		if (!((line[i] >= 'a' && line[i] <= 'z') || (line[i] >= 'A' \
 		&& line[i] <= 'Z') || (line[i] >= '0' && line[i] <= '9')))

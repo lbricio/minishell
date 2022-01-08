@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirects.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:19:30 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/07 00:11:10 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 22:38:51 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	treat_input_utils(char *line, int i, t_cmds *cmds)
 {
 	char	*outfile;
 
-	while (line[i] == ' ')
+	while (ft_isspace(line[i]))
 		i++;
 	while (!((line[i] >= 'a' && line[i] <= 'z') \
 	|| (line[i] >= 'A' && line[i] <= 'Z') \
@@ -65,15 +65,15 @@ char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act)
 	i = 0;
 	while (line[i] && line[i] != '|')
 		i++;
-	while (line[i] != '<')
+	while (i >= 0 && line[i] != '<')
 		i--;
 	if (i > 0 && line[i - 1] == '<')
 	{
-		while (line[i] == '<' || line[i] == ' ')
+		while (line[i] == '<' || ft_isspace(line[i]))
 			i++;
 		limiter = 0;
 		limiter = ft_strword(line + i, limiter);
-		i = here_doc(limiter, act);
+		i = here_doc(limiter, act, cmds);
 		free(limiter);
 		if (i != 0)
 			return (0);
@@ -90,24 +90,32 @@ static void	get_redirect_utils(char *line, t_cmds *cmds, int o_file, int *count)
 	int		i;
 
 	i = 0;
-	while (line[i] == '>' || line[i] == ' ')
-		i++;
-	outfile = 0;
-	outfile = ft_strword(line + i, outfile);
-	cmds->fd_out = open_file(outfile, o_file);
-	free(outfile);
-	while ((line[i] >= 'a' && line[i] <= 'z') \
-	|| (line[i] >= 'A' && line[i] <= 'Z') \
-	|| (line[i] >= '0' && line[i] <= '9') \
-	|| line[i] == '.')
-		i++;
+	while (line[i] == '>')
+	{
+		while (line[i] == '>' || ft_isspace(line[i]))
+			i++;
+		outfile = 0;
+		outfile = ft_strword(line + i, outfile);
+		cmds->fd_out = open_file(outfile, o_file);
+		free(outfile);
+		while ((line[i] >= 'a' && line[i] <= 'z') \
+		|| (line[i] >= 'A' && line[i] <= 'Z') \
+		|| (line[i] >= '0' && line[i] <= '9') \
+		|| line[i] == '.')
+			i++;
+		while (ft_isspace(line[i]))
+			(i)++;
+	}
 	(*count) += i;
 }
 
 void	get_redirect(char *line, int *count, t_cmds *cmds)
 {
-	while (*line == ' ')
+	while (ft_isspace(*line))
+	{
+		(*count)++;
 		line++;
+	}
 	if (line[0] == '|' && line[1] != '|')
 		cmds->fd_out = 1000;
 	else if (line[0] == '>' && line[1] == '>' && line[2] != '>')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_args.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:18:45 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/06 16:49:49 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:18:06 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	get_args_utils(t_data *data, char *line, int i, t_args *iter)
 	quote = 0;
 	j = 0;
 	while ((line[i + j] != 0 && line[i + j] != '|' && line[i + j] \
-	!= ';' && line[i + j] != '>' && line[i + j] != ' ') || quote)
+	!= ';' && line[i + j] != '>' && !ft_isspace(line[i + j])) || quote)
 	{
 		if ((line[i + j] == '\'' || line[i + j] == '"') && !quote)
 			quote = line[i + j];
@@ -40,7 +40,7 @@ static int	get_args_utils2(t_data *data, char *line, t_args **iter, int i)
 	int	j;
 
 	j = 0;
-	while (line[i + j] == ' ')
+	while (ft_isspace(line[i + j]))
 		j++;
 	if (line[i + j] != 0 && line[i + j] != '|' && line[i + j] != ';')
 	{
@@ -67,7 +67,7 @@ t_args	*get_args(char *line, int *count, t_data *data)
 	args->arg = 0;
 	args->next = 0;
 	iter = args;
-	while (*line == ' ')
+	while (ft_isspace(*line))
 	{
 		(*count)++;
 		line++;

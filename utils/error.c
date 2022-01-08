@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbricio- <lbricio-@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 12:12:06 by lbricio-          #+#    #+#             */
-/*   Updated: 2022/01/04 14:10:21 by lbricio-         ###   ########.fr       */
+/*   Updated: 2022/01/07 19:09:45 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,20 @@ int	sintax_error(void)
 
 int	flag_error(t_cmds *cmds)
 {
-	t_cmds	*iter;
-	t_cmds	*next;
-	t_args	*next_arg;
+	t_args	*new;
 
-	printf("%s: invalid option -- \'%s\'\n", cmds->cmd, &cmds->flags[1]);
-	iter = cmds;
-	while (iter != 0)
+	if (!ft_strncmp(cmds->cmd, "echo", 4) && cmds->cmd[4] == 0)
 	{
-		if (iter->flags)
-			free(iter->flags);
-		while (iter->args)
-		{
-			next_arg = iter->args->next;
-			free(iter->args);
-			iter->args = next_arg;
-		}
-		next = iter->next;
-		free(iter);
-		iter = next;
+		new = malloc(sizeof (t_args));
+		new->arg = cmds->flags;
+		new->next = cmds->args;
+		cmds->args = new;
+		cmds->flags = 0;
+		return (0);
 	}
-	return (2);
+	printf("%s: invalid option -- \'%s\'\n", cmds->cmd, &cmds->flags[1]);
+	g_reset_fd[2] = 2;
+	return (1);
 }
 
 int	cmd_error(t_cmds *cmds)
