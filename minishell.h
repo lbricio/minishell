@@ -6,7 +6,7 @@
 /*   By: lufelipe <lufelipe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:21:48 by lufelipe          #+#    #+#             */
-/*   Updated: 2022/01/07 22:43:37 by lufelipe         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:55:27 by lufelipe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ char	*treat_input_red(char *line, t_cmds *cmds, t_sig **act);
 char	*get_variable(char *line, int size, t_vars *variables);
 char	*get_flags(char *line, int *count, t_data *data);
 char	*get_cmd(char *line, int *count, t_data *data);
-char	*trunc_flags(char *flags, t_data *data);
 char	*trunc_input_filename(char *line);
 char	*change_directory(char *path);
 char	get_quote(char *line);
@@ -114,7 +113,6 @@ void	sigint_handle(int sig);
 void	config_sigaction(t_sig *act, void (*handler)(int), int sig);
 void	heredoc_sigint(int sig);
 int		here_doc(char *limiter, t_sig **act, t_cmds *cmds);
-// int		here_doc(char *limiter, t_sig **act);
 
 char	*ft_strnstr(const char	*big, const char *little, size_t len);
 char	*get_variable(char *line, int size, t_vars *variables);
